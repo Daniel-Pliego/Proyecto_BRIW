@@ -12,7 +12,7 @@ function getURLsFromHTML(htmlBody, baseURL) {
                 const urlObj = new URL(`${baseURL}${linkElement.href}`);
                 href = urlObj.href;
             } catch (e) {
-                console.log("error mal url");
+                console.log("error del url storage");
                 continue; 
             }
         } else {
@@ -20,8 +20,8 @@ function getURLsFromHTML(htmlBody, baseURL) {
                 const urlObj = new URL(linkElement.href);
                 href = urlObj.href;
             } catch (e) {
-                console.log("error del url");
-                continue; // Saltamos a la siguiente iteración del bucle si hay un error con la URL
+                console.log("error del url storage");
+                continue; 
             }
         }
         if (!urlsSet.has(href)) {
@@ -34,7 +34,47 @@ function getURLsFromHTML(htmlBody, baseURL) {
 }
 
 function indexData(htmlBody, baseURL){
-    console.log("Indexado", baseURL);
+    const metaTags = getMetaTagsFromHTML(htmlBody);
+    const titleTag = getTitleTagFromHTML(htmlBody);
+    handleMetaTags(metaTags, titleTag);
+}
+
+function getMetaTagsFromHTML(html) {
+    const dom = new JSDOM(html);
+    return dom.window.document.querySelectorAll('meta');
+}
+
+function getTitleTagFromHTML(html) {
+    const dom = new JSDOM(html);
+    return dom.window.document.querySelector('title');
+}
+
+function handleMetaTags(metaTags, titleTag, url) {
+    const result = {
+        title: titleTag ? titleTag.text : '',
+        metaTitle: '',
+        metaType: '',
+        metaDescription: '',
+
+    };
+
+    metaTags.forEach((tag) => {
+        const tagName = tag.getAttribute('name');
+        const tagProperty = tag.getAttribute('property');
+        const tagContent = tag.getAttribute('content');
+
+        if (tagName === 'title') {
+            result.title = tag.textContent;
+        } else if (tagProperty === 'og:title') {
+            result.metaTitle = tagContent;
+        } else if (tagProperty === 'og:type') {
+            result.metaType = tagContent;
+        } else if (tagName === 'description' || tagProperty === 'og:description') {
+            result.metaDescription = tagContent;
+        }
+    });
+
+    console.log(`Meta data from ${"here"}:`, result);
 }
 
 module.exports = {

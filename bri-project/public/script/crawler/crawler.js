@@ -4,7 +4,7 @@ import { getURLsFromHTML, indexData } from './storage';
 
 async function crawlPage(url, depth, visitedURLs) {
   if (depth === 0 || visitedURLs.has(url)) {
-      return; // Salir de la función si hemos alcanzado el nivel de profundidad deseado o si ya hemos visitado esta URL
+      return; 
   }
 
   try {
