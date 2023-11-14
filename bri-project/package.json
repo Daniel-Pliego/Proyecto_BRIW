@@ -15,7 +15,7 @@
     "serverless-mysql": "^1.5.5"
   },
   "devDependencies": {
-    "autoprefixer": "^10.0.1",
+        "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.2",
     "postcss": "^8",
