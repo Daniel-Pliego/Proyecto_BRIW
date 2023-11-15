@@ -1,4 +1,14 @@
+//https://lbdremy.github.io/solr-node-client/
+//https://cwiki.apache.org/confluence/display/solr/MoreLikeThisHandler
 import { JSDOM } from 'jsdom';
+var solr = require('solr-client')
+
+const solrClient = solr.createClient({
+    host: 'localhost',
+    port: 8983,
+    core: 'MiNucleoc',
+    path: '/solr',
+});
 
 function getURLsFromHTML(htmlBody, baseURL) {
     const urlsSet = new Set();
@@ -54,7 +64,7 @@ function handleMetaTags(metaTags, titleTag, url) {
         title: titleTag ? titleTag.text : '',
         metaTitle: '',
         metaType: '',
-        metaDescription: '',
+        meDescription: '',
 
     };
 
@@ -73,8 +83,25 @@ function handleMetaTags(metaTags, titleTag, url) {
             result.metaDescription = tagContent;
         }
     });
+    sendDataToSolrClient(JSON.parse(JSON.stringify(result)));
+}
 
-    console.log(`Meta data from ${"here"}:`, result);
+function sendDataToSolrClient(data) {
+    console.log("data", data);
+    solrClient.add(data, function(err, obj) {
+        if (err) {
+            console.error('Error al indexar el documento en Solr:', err);
+        } else {
+            // Confirma los cambios
+            solrClient.commit(function(err, res) {
+                if (err) {
+                    console.error('Error al confirmar el cambio en Solr:', err);
+                } else {
+                    console.log('Documento indexado con éxito en Solr:', res);
+                }
+            });
+        }
+    });
 }
 
 module.exports = {
