@@ -1,7 +1,7 @@
 // Si no tienen configurado sus variables de entorno, deben estar en la carpeta de los archiivos de Solr
 
 /* Crear core con lo archivos de configuración*/ 
-bin/solr create_core -c MiNucleo -d path/to/tu/directorio/conf
+bin/solr create_core -c MiNucleo -d <solr-config>
 
 
 /*Iniciar solr*/
