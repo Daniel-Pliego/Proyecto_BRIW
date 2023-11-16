@@ -1,19 +1,11 @@
-const urlsBase = [
-  {
-      name: "url1",
-      url:"https://www.wagslane.dev/",
-      visited: false
-  },
-  {
-      name: "url2",
-      url:"https://es.wikipedia.org/wiki/Amazon",
-      visited: false
+async function getUrlsFromMock() {
+  try {
+    const response = await fetch('http://localhost:3000/indexer/read');
+    const data = await response.json();
+    return data; // Datos leídos desde el archivo JSON
+  } catch (error) {
+    console.error('Error al obtener datos:', error);
   }
-]
-
-function getUrlsFromMock() {
-  const foundUrls = urlsBase.map(enlace => enlace.url);
-  return foundUrls;
 }
 
 module.exports = {

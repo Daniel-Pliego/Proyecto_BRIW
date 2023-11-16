@@ -9,7 +9,7 @@ async function crawlPage(url, depth, visitedURLs) {
 
   try {
       var HTMLfromURL = await getHTMLfromURL(url);
-      indexData(HTMLfromURL, url);
+      await indexData(HTMLfromURL, url);
 
       let newURLsToVisit = getURLsFromHTML(HTMLfromURL, url);
       visitedURLs.add(url); // Agregar la URL actual al conjunto de URLs visitadas
@@ -23,18 +23,31 @@ async function crawlPage(url, depth, visitedURLs) {
 }
 
 async function initCrawler() {
-  var urls = getUrlsFromFile();
+  var urls = await getUrlsFromFile();
   let depthLevel = 2;
   let visitedURLs = new Set(); // Conjunto para almacenar URLs visitadas
 
   for (let i = 0; i < urls.length-1; i++) {
-      let pages = urls[i].split('0');
-      let pagesIndex = pages[1];
-      let pageURL = pages[0];
+      let pagesIndex = urls[i].visited;
+      let pageURL = urls[i].url;
 
       if (!pagesIndex) {
           await crawlPage(pageURL, depthLevel, visitedURLs);
+          urls[i].visited = true;
       }
   }
+  let aux = await updateURLsFromJSONFile(urls);
+}
+
+async function updateURLsFromJSONFile(dataToUpload) {
+    const response = await fetch('http://localhost:3000/indexer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToUpload)
+      });
+      const data = await response.json();
+      console.log(data);
 }
 export { initCrawler };
