@@ -8,7 +8,7 @@ const lngDetector = new LanguageDetect();
 const solrClient = solr.createClient({
     host: 'localhost',
     port: 8983,
-    core: 'Prueba2',
+    core: 'Prueba3',
     path: '/solr',
 });
 

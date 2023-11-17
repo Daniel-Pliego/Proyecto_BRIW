@@ -2,6 +2,7 @@
 
 /* Crear core con lo archivos de configuración*/ 
 bin/solr create_core -c MiNucleo -d <solr-config>
+solr create_core -c Prueba3 -d C:\Users\jonat\OneDrive\Documentos\7toSemestre\busquedaWeb\Proyecto_BRIW\solr-config
 
 
 /*Iniciar solr*/
