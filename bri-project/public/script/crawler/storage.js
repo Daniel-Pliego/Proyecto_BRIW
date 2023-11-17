@@ -8,7 +8,7 @@ const lngDetector = new LanguageDetect();
 const solrClient = solr.createClient({
     host: 'localhost',
     port: 8983,
-    core: 'MiNucleoc',
+    core: 'Prueba2',
     path: '/solr',
 });
 
@@ -161,7 +161,7 @@ function makeObjecttoIndex(metaTags, titleTag, urlB, categoryB) {
         title: titleTag ? titleTag.text : '',
         metaTitle: '',
         metaType: '',
-        meDescription: '',
+        metaDescription: '',
         url: 'urlB',
         category: 'categoryB'
     };

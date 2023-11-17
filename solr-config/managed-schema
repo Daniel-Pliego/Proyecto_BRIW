@@ -263,7 +263,9 @@
   <dynamicField name="*_d" type="pdouble" indexed="true" stored="true"/>
   <dynamicField name="*_p" type="location" indexed="true" stored="true"/>
 
-
+  
+  <copyField source="url" dest="url_str" maxChars="256"/>
+  <copyField source="category" dest="category_str" maxChars="256"/>
   <copyField source="metaTitle" dest="metaTitle_str" maxChars="256"/>
   <copyField source="metaType" dest="metaType_str" maxChars="256"/>
   <copyField source="title" dest="title_str" maxChars="256"/>
