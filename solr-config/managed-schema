@@ -12,7 +12,7 @@
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
   <field name="metaDescription" type="text_general" indexed="true" stored="true" multiValued="true"/>
   <field name="url" type="text_general" indexed="true" stored="true" multiValued="true"/>
-  <field name="category" type="text_general" indexed="true" stored="true" multiValued="true"/>
+  <field name="category" type="string" indexed="true" stored="true" multiValued="true"/>
   <field name="metaTitle" type="text_general" indexed="true" stored="true" multiValued="true"/>
   <field name="metaType" type="text_general" indexed="true" stored="true" multiValued="true"/>
   <field name="title" type="text_general" indexed="true" stored="true" multiValued="true"/>
@@ -188,7 +188,9 @@
       <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true" format="snowball"/>
       <filter class="solr.LowerCaseFilterFactory"/>
       <filter class="solr.TrimFilterFactory" />
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
       <filter class="solr.PatternReplaceFilterFactory" pattern="^\s*(.*?)\s*$" replacement="$1" replace="all" />
+      <filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="25"/>
     </analyzer>
     <analyzer type="query">
       <tokenizer class="solr.StandardTokenizerFactory"/>

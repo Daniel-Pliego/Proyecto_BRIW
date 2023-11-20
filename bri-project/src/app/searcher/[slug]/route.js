@@ -1,5 +1,7 @@
-const solrUrl = 'http://localhost:8983/solr/Prueba9';
+import {returnURLcore} from "public/script/solrClient/solr.js";
+const solrUrl = returnURLcore();
 
+//http://localhost:8983/solr/Prueba10/select?facet.field=category&facet.limit=10&facet=true&indent=true&q.op=OR&q=*%3A*
 //http://localhost:3000/searcher/search?query=hello
 export async function GET(request, { params }) {
     var result;
@@ -39,7 +41,7 @@ async function makePhraseQuery(queryToSearch){
         ' OR category:' + encodeURIComponent(queryToSearch) +
         ' OR metaDescription:' + encodeURIComponent(queryToSearch);
     }
-    const searchUrl = `${solrUrl}/select?indent=true&q.op=OR&q=${encodeURIComponent(query)}&facet=true&facet.field=${"category"}&facet.limit=${10}`;
+    const searchUrl = `${solrUrl}/select?indent=true&q.op=OR&q=${encodeURIComponent(query)}&facet=true&facet.field=${"category"}&facet.limit=${10}&rows=1000`;
     console.log(searchUrl);
     try {
         const response = await fetch(searchUrl);
