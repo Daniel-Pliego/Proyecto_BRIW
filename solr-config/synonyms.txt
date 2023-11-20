@@ -21,6 +21,26 @@ fooaaa,baraaa,bazaaa
 GB,gib,gigabyte,gigabytes
 MB,mib,megabyte,megabytes
 Television, Televisions, TV, TVs
+grande, enorme, extenso, amplio
+pequeño, diminuto, minúsculo
+rápido, veloz, ágil
+lento, pausado, gradual
+inteligente, astuto, perspicaz, sagaz
+amable, gentil, cordial, bondadoso
+fuerte, robusto, resistente, sólido
+débil, frágil, quebradizo
+feliz, contento, alegre, dichoso
+triste, melancólico, apenado, afligido
+desarrollo de software, programación, codificación
+programador, desarrollador, ingeniero de software, codificador, programista
+código fuente, código de programa, texto fuente, script, líneas de código
+depuración, debugging, identificación de errores, corrección de bugs
+despliegue, implementación, instalación, puesta en producción, distribución
+framework, marco de trabajo, estructura, plataforma, entorno de desarrollo
+repositorio de código, almacén de código, repositorio de software, repositorio Git
+back-end, backend, servidor, lógica de servidor
+front-end, frontend, interfaz de usuario, presentación
+
 #notice we use "gib" instead of "GiB" so any WordDelimiterGraphFilter coming
 #after us won't split it into two words.
 

@@ -9,7 +9,7 @@ const lngDetector = new LanguageDetect();
 const solrClient = solr.createClient({
     host: 'localhost',
     port: 8983,
-    core: 'Prueba3',
+    core: 'Prueba6',
     path: '/solr',
 });
 
@@ -172,7 +172,7 @@ function getLenguageFromHTML(htmlBody, metaTags){
 
 function makeObjecttoIndex(metaTags, titleTag, urlB, categoryB) {
     const result = {
-        title: titleTag ? titleTag.text : '',
+        title: titleTag ? titleTag.text.replace(/\n/g, '').trim()  : '',
         metaTitle: '',
         metaType: '',
         metaDescription: '',
@@ -186,7 +186,7 @@ function makeObjecttoIndex(metaTags, titleTag, urlB, categoryB) {
         const tagContent = tag.getAttribute('content');
 
         if (tagName === 'title') {
-            result.title = tag.textContent;
+            result.title = tag.textContent.replace(/\n/g, '').trim();
         } else if (tagProperty === 'og:title') {
             result.metaTitle = tagContent;
         } else if (tagProperty === 'og:type') {
