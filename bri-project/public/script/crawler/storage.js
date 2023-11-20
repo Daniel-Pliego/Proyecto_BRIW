@@ -1,17 +1,10 @@
 //https://lbdremy.github.io/solr-node-client/
 //https://cwiki.apache.org/confluence/display/solr/MoreLikeThisHandler
 import { JSDOM } from 'jsdom';
-var solr = require('solr-client')
+import solrClient from "public/script/solrClient/solr.js";
 const stopword = require('stopword');
 const LanguageDetect = require('languagedetect');
 const lngDetector = new LanguageDetect();
-
-const solrClient = solr.createClient({
-    host: 'localhost',
-    port: 8983,
-    core: 'Prueba6',
-    path: '/solr',
-});
 
 function getURLsFromHTML(htmlBody, baseURL) {
     const urlsSet = new Set();
