@@ -1,16 +1,11 @@
 //https://lbdremy.github.io/solr-node-client/
 //https://cwiki.apache.org/confluence/display/solr/MoreLikeThisHandler
 import { JSDOM } from 'jsdom';
-var solr = require('solr-client')
+import {returnSolrClient} from "public/script/solrClient/solr.js";
+const stopword = require('stopword');
 const LanguageDetect = require('languagedetect');
 const lngDetector = new LanguageDetect();
-
-const solrClient = solr.createClient({
-    host: 'localhost',
-    port: 8983,
-    core: 'Prueba3',
-    path: '/solr',
-});
+const solrClient = returnSolrClient();
 
 function getURLsFromHTML(htmlBody, baseURL) {
     const urlsSet = new Set();
@@ -48,9 +43,9 @@ function getURLsFromHTML(htmlBody, baseURL) {
 async function indexData(htmlBody, baseURL){
     const metaTags = getMetaTagsFromHTML(htmlBody);
     const titleTag = getTitleTagFromHTML(htmlBody);
-    //const lenguage = getLenguageFromHTML(htmlBody, metaTags);
-    //const category = await getCategoryFromHTML(htmlBody, metaTags);
-    const dataIndex = makeObjecttoIndex(metaTags, titleTag, baseURL);
+    const lenguage = getLenguageFromHTML(htmlBody, metaTags);
+    const category = await getCategoryFromHTML(htmlBody, metaTags, lenguage);
+    const dataIndex = makeObjecttoIndex(metaTags, titleTag, baseURL, category);
     sendDataToSolrClient(JSON.parse(JSON.stringify(dataIndex)));
 }
 
@@ -67,23 +62,27 @@ function getTitleTagFromHTML(html) {
 async function getCategoryFromHTML(htmlBody, metaTags, lenguage){
     let keywords = [];
     if(lenguage === 'spanish'){
-        keywords = extractKeywords(metaTags);
+        console.log("español");
+        keywords = extractKeywords(metaTags, 'spanish');
+        keywords = removeStopwords(keywords);
         const spanishKeywords = [];
-        for (let i = 0; i < keywords.length; i++) {
+        for (let i = 0; i < Math.min(2, keywords.length); i++) {
             const keyword = keywords[i];
             const relatedSpanishKeywords = await getSpanishKeywordsFromAPI(keyword);
             spanishKeywords.push(relatedSpanishKeywords);
         }
-        console.log(spanishKeywords);
+         return spanishKeywords;
     }else{
-        keywords = extractKeywords(metaTags);
-        const spanishKeywords = [];
-        for (let i = 0; i < keywords.length; i++) {
-            const keyword = keywords[i];
-            const relatedSpanishKeywords = await getKeywordsFromAPI(keyword);
-            spanishKeywords.push(relatedSpanishKeywords);
+        console.log("ingles");
+        keywords = extractKeywords(metaTags, "ingles");
+        keywords = removeStopwords(keywords);
+        const englishKeys = [];
+        for (let i = 0; i < Math.min(2, keywords.length); i++) {
+            const Auxkeyword = keywords[i];
+            const relatedEnglishKeywords = await getKeywordsFromAPI(Auxkeyword);
+            englishKeys.push(relatedEnglishKeywords);
         }
-        console.log(spanishKeywords);
+        return englishKeys;
     }
 }
 
@@ -94,7 +93,10 @@ async function getSpanishKeywordsFromAPI(keyword) {
         const response = await fetch(apiUrl);
         const data = await response.json();
 
-        const spanishKeyword = data[0]?.word;
+        let spanishKeyword = data[0]?.word;
+        if (spanishKeyword === keyword.toLowerCase() && data.length > 1) {
+            spanishKeyword = data[1]?.word;
+        }
         return spanishKeyword || keyword;
     } catch (error) {
         console.error(error);
@@ -109,7 +111,10 @@ async function getKeywordsFromAPI(keyword) {
         const response = await fetch(apiUrl);
         const data = await response.json();
 
-        const keywordResult = data[0]?.word;
+        let keywordResult = data[0]?.word;
+        if (keywordResult === keyword.toLowerCase() && data.length > 1) {
+            keywordResult = data[1]?.word;
+        }
         return keywordResult || keyword;
     } catch (error) {
         console.error(error);
@@ -117,7 +122,7 @@ async function getKeywordsFromAPI(keyword) {
     }
 }
 
-function extractKeywords(metaTags){
+function extractKeywords(metaTags, lenguage){
     let description;
     let keywords = [];
     let keywordsAUX = [];
@@ -129,10 +134,13 @@ function extractKeywords(metaTags){
             description = tagContent;
         }
     });
-
     if (description) {
-        keywords = description.split(' ');
-        keywordsAUX = removeStopwords(keywords);
+        if(lenguage === 'spanish'){
+            keywordsAUX = removeStopwords(description.split(' '));
+        }else{
+            keywordsAUX = stopword.removeStopwords(description.split(' '));
+        }
+
     }
     return keywordsAUX;
 }
@@ -158,12 +166,12 @@ function getLenguageFromHTML(htmlBody, metaTags){
 
 function makeObjecttoIndex(metaTags, titleTag, urlB, categoryB) {
     const result = {
-        title: titleTag ? titleTag.text : '',
+        title: titleTag ? titleTag.text.replace(/\n/g, '').trim()  : '',
         metaTitle: '',
         metaType: '',
         metaDescription: '',
-        url: 'urlB',
-        category: 'categoryB'
+        url: urlB,
+        category: categoryB
     };
 
     metaTags.forEach((tag) => {
@@ -172,7 +180,7 @@ function makeObjecttoIndex(metaTags, titleTag, urlB, categoryB) {
         const tagContent = tag.getAttribute('content');
 
         if (tagName === 'title') {
-            result.title = tag.textContent;
+            result.title = tag.textContent.replace(/\n/g, '').trim();
         } else if (tagProperty === 'og:title') {
             result.metaTitle = tagContent;
         } else if (tagProperty === 'og:type') {
@@ -203,7 +211,8 @@ function sendDataToSolrClient(data) {
 }
 
 function removeStopwords(words) {
-    return words.filter(word => !stopwords.includes(word.toLowerCase()));
+    const filteredWords = words.filter(word => !stopwords.includes(word.toLowerCase()));
+    return filteredWords;
 }
 
 const stopwords = [
@@ -233,7 +242,7 @@ const stopwords = [
     'tendríamos', 'tendríais', 'tendrían', 'tenía', 'tenías', 'teníamos', 'teníais', 'tenían', 'tuve', 'tuviste', 'tuvo', 'tuvimos', 'tuvisteis',
     'tuvieron', 'tuviera', 'tuvieras', 'tuviéramos', 'tuvierais', 'tuvieran', 'tuviese', 'tuvieses', 'tuviésemos', 'tuvieseis', 'tuviesen', 'teniendo',
     'tenido', 'tenida', 'tenidos', 'tenidas', 'tened','i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', "you're", "you've", "you'll", "you'd", 'your', 'yours', 'yourself',
-    'yourselves', 'he', 'him', 'his', 'himself', 'she', "she's", 'her', 'hers', 'herself', 'it', "it's", 'its', 'itself', 'they', 'them'
+    'yourselves', 'he', 'him', 'his', 'himself', 'she', "she's", 'her', 'hers', 'herself', 'it', "it's", 'its', 'itself', 'they', 'them', 'si', 'Why', 'why'
 ];
 
 module.exports = {

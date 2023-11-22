@@ -27,7 +27,7 @@ async function initCrawler() {
   let depthLevel = 2;
   let visitedURLs = new Set(); // Conjunto para almacenar URLs visitadas
 
-  for (let i = 0; i < urls.length-1; i++) {
+  for (let i = 0; i < urls.length; i++) {
       let pagesIndex = urls[i].visited;
       let pageURL = urls[i].url;
 

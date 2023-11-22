@@ -18,7 +18,9 @@
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "serverless-mysql": "^1.5.5",
-    "solr-client": "^0.2.1"
+    "solr-client": "^0.10.0-rc10",
+    "stopword": "^2.0.8",
+    "stopwords-es": "^0.3.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",

@@ -1,1 +1,12 @@
-[{"name":"url1","url":"https://www.wagslane.dev/","visited":true},{"name":"url2","url":"https://es.wikipedia.org/wiki/Amazon","visited":false}]
+[
+    {
+        "name": "url1",
+        "url": "https://www.wagslane.dev/",
+        "visited": false
+    },
+    {
+        "name": "url2",
+        "url": "https://es.wikipedia.org/wiki/Amazon",
+        "visited": false
+    }
+]
