@@ -2,17 +2,16 @@ import Link from "next/link";
 
 export const Navbar = () => {
   return (
-    <nav className="w-full bg-indigo-600 text-white flex px-8 py-2 gap-4 items-center">
+    <nav className="flex items-center w-full gap-4 px-8 py-2 text-white bg-indigo-600">
       <Link className="flex hover:text-gray-200" href="/">
         <span className="material-symbols-outlined">search</span>
       </Link>
-
-      <div className="p-2 px-4 hover:bg-indigo-700 rounded-lg">
-        <Link href="/">Buscador</Link>
-      </div>
-      <div className="p-2 px-4 hover:bg-indigo-700 rounded-lg">
-        <Link href="/upload">Subir archivos</Link>
-      </div>
+      <Link className="p-2 px-4 rounded-lg hover:bg-indigo-700" href="/">
+        Buscador
+      </Link>
+      <Link className="p-2 px-4 rounded-lg hover:bg-indigo-700" href="/upload">
+        Subir archivos
+      </Link>
     </nav>
   );
 };
