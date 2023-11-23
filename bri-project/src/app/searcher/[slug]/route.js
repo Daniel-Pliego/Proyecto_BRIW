@@ -21,7 +21,6 @@ export async function GET(request, { params }) {
                 result = await makeBooleanQuery(query);
             } else {
                 result = await makePhraseQuery(query);
-                // return Response.json(result);
             }
 
             return Response.json(result);
@@ -35,7 +34,7 @@ function removeAccents(accentedPhrase) {
 }
 
 async function addWord(word, tokenPrevious, query) {
-    query += " " + tokenPrevious + " (" + generateSimilarWordsQuery(await similarWords(word)) + ") ";
+    query += tokenPrevious + " (" + generateSimilarWordsQuery(await similarWords(word)) + ") ";
     return query;
 }
 
@@ -69,9 +68,11 @@ async function makeBooleanQuery(userInput) {
         }
     }
 
-    querySolr = querySolr + fixedEncodeURIComponent(query) + `&facet=true&facet.field=${"category"}&facet.limit=${10}&rows=1000`;
+    let scoreSortDescendant = "&sort=score+desc&fl=*,+score";
+
+    querySolr = querySolr + fixedEncodeURIComponent(query) + `&facet=true&facet.field=${"category"}&facet.limit=${10}&rows=1000` + scoreSortDescendant;
     console.log(querySolr);
-    try { //! Quitar una vez funcione el front
+    try {
         const response = await fetch(querySolr);
         const data = await response.text();  // Obtener la respuesta como texto
         const jsonData = JSON.parse(data);
@@ -81,7 +82,7 @@ async function makeBooleanQuery(userInput) {
     }
 }
 
-function fixedEncodeURIComponent(str) {
+function fixedEncodeURIComponent(str) { //*Para codificar inclusive caracteres que no codifica el encode normal
     return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
         return '%' + c.charCodeAt(0).toString(16);
     });
@@ -119,22 +120,18 @@ async function getSimilarMatrix(array, noun) {
 async function similarWords(noun) { //* Por palabra
     var similar = [];
     similar = await getSimilarMatrix(similar, noun);
-    console.log("ARRAY:> " + similar + "\n");
+    console.log("ARRAY:> " + similar + "\n"); //! Muestra los sinonimos de una palabra, quitar antes de terminar proyecto
     return similar; //* Array de palabras similares a la palabra original
 }
 
 async function makePhraseQuery(queryToSearch) {
-
     var query = "";
     if (queryToSearch === "*:*") {
         query = "*:*";
     } else {
-        // query = 'title:' + encodeURIComponent(queryToSearch) +
-        //     ' OR category:' + encodeURIComponent(queryToSearch) +
-        //     ' OR metaDescription:' + encodeURIComponent(queryToSearch);
-        query += generateSimilarWordsQuery(await similarWords(queryToSearch), true, "or");
+        query += "(" + generateSimilarWordsQuery(await similarWords(queryToSearch)) + ")";
     }
-    const searchUrl = `${solrUrl}/select?indent=true&q.op=OR&q=${encodeURIComponent(query)}&facet=true&facet.field=${"category"}&facet.limit=${10}&rows=1000`;
+    const searchUrl = `${solrUrl}/select?indent=true&q.op=OR&q=${fixedEncodeURIComponent(query)}&facet=true&facet.field=${"category"}&facet.limit=${10}&rows=1000&sort=score+desc&fl=*,+score`;
     console.log(searchUrl);
     try {
         const response = await fetch(searchUrl);
