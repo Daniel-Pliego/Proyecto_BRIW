@@ -10,20 +10,32 @@ const dataFilePath = path.join(process.cwd(), 'json/urlbase.json');
 // query is "hello" for /api/search?query=hello
   //http://localhost:3000/indexer/read
 export async function GET(request, { params }) {
-    const searchParams = request.nextUrl.searchParams
-    console.log(searchParams);
-    if(searchParams.length > 0){
-        const query = searchParams.get('query')
-        return Response.json({ helo:query });
-    }else{
         const slug = params.slug;
         if(slug === 'index'){
             await initCrawler();
             return Response.json({ helo:"indexado" });
         }else if(slug === 'read'){
+          try {
             const jsonData = await fsPromises.readFile(dataFilePath);
             const objectData = JSON.parse(jsonData);
             return Response.json(objectData);
+          } catch (error) {
+              console.error('Error reading file:', error);
+              return Response.json({ error: 'Failed to read data' });
+          }
         }
-    }
 }
+
+export async function POST(request, { params }) {
+    try {
+        const res = await request.json()
+        const slug = params.slug;
+         const updatedData = JSON.stringify(res);
+         await fsPromises.writeFile(dataFilePath, updatedData, { flag: 'w' });
+
+        return Response.json({ message: "Datos actualizados correctamente" });
+      } catch (error) {
+        console.error(error);
+        return Response.json({ message: "Error al actualizar los datos" });
+      }
+  }
