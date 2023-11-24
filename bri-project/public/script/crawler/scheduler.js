@@ -1,6 +1,7 @@
-async function getUrlsFromMock() {
+async function getUrlsFromFile() {
   try {
-    const response = await fetch('http://localhost:3000/indexer/read');
+    const response = await fetch('http://localhost:3000/api/indexer/read', {
+      method: 'GET'});
     const data = await response.json();
     return data; // Datos leídos desde el archivo JSON
   } catch (error) {
@@ -9,5 +10,5 @@ async function getUrlsFromMock() {
 }
 
 module.exports = {
-  getUrlsFromFile: getUrlsFromMock, 
+  getUrlsFromFile: getUrlsFromFile
 };

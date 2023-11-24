@@ -40,7 +40,7 @@ async function initCrawler() {
 }
 
 async function updateURLsFromJSONFile(dataToUpload) {
-    const response = await fetch('http://localhost:3000/indexer', {
+    const response = await fetch('http://localhost:3000/api/indexer/updateFile', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
