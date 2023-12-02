@@ -12,7 +12,13 @@ function getURLsFromHTML(htmlBody, baseURL) {
     const dom = new JSDOM(htmlBody);
     const linkElements = dom.window.document.querySelectorAll('a');
 
-    for (const linkElement of linkElements) {
+    const liskCount = linkElements.length;
+    const maxLinks = 15;
+    const listsToVisit = Math.min(liskCount, maxLinks);
+
+    for (let i = 0; i < listsToVisit; i++) {
+        let linkElement;
+        linkElement = linkElements[i];
         let href;
         if (linkElement.href.slice(0, 1) === '/') {
             try {
@@ -43,10 +49,12 @@ function getURLsFromHTML(htmlBody, baseURL) {
 async function indexData(htmlBody, baseURL){
     const metaTags = getMetaTagsFromHTML(htmlBody);
     const titleTag = getTitleTagFromHTML(htmlBody);
-    const lenguage = getLenguageFromHTML(htmlBody, metaTags);
-    const category = await getCategoryFromHTML(htmlBody, metaTags, lenguage);
-    const dataIndex = makeObjecttoIndex(metaTags, titleTag, baseURL, category);
-    sendDataToSolrClient(JSON.parse(JSON.stringify(dataIndex)));
+    if(hasMetaTagsDescription(metaTags) && titleTag){
+        let lenguage = getLenguageFromHTML(htmlBody, metaTags);
+        let category = await getCategoryFromHTML(htmlBody, metaTags, lenguage);
+        let dataIndex = makeObjecttoIndex(metaTags, titleTag, baseURL, category);
+        sendDataToSolrClient(JSON.parse(JSON.stringify(dataIndex)));
+    }
 }
 
 function getMetaTagsFromHTML(html) {
@@ -121,6 +129,19 @@ async function getKeywordsFromAPI(keyword) {
         return keyword;
     }
 }
+
+function hasMetaTagsDescription(metaTags) {
+    let hasDescription = false;
+    metaTags.forEach((tag) => {
+        const tagName = tag.getAttribute('name');
+        const tagProperty = tag.getAttribute('property');
+        if (tagName === 'description' || tagProperty === 'og:description') {
+            hasDescription = true;
+        }
+    });
+    return hasDescription;
+}
+
 
 function extractKeywords(metaTags, lenguage){
     let description;

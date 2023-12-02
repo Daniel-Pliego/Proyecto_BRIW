@@ -4,9 +4,6 @@
 import {initCrawler} from "public/script/crawler/crawler.js";
 import fsPromises from 'fs/promises';
 import path from 'path';
-import axios from 'axios';
-const FormData = require('form-data');
-const fs = require('fs');
 
 const dataFilePath = path.join(process.cwd(), 'json/urlbase.json');
 
@@ -16,7 +13,12 @@ export async function GET(request, { params }) {
         const slug = params.slug;
         if(slug === 'index'){
             await initCrawler();
-            return Response.json({ helo:"indexado" });
+            return new Response(
+              JSON.stringify({ message: "Files uploaded successfully" }),
+              {
+                headers: { "Content-Type": "application/json" },
+              }
+            );
         }else if(slug === 'read'){
           try {
             const jsonData = await fsPromises.readFile(dataFilePath);
@@ -41,24 +43,4 @@ export async function POST(request, { params }) {
         console.error(error);
         return Response.json({ message: "Error al actualizar los datos" });
       }
-  }
-
-  async function enviarArchivoASolr() {
-    const filePath = 'C:\\Users\\jonat\\OneDrive\\Documentos\\7toSemestre\\busquedaWeb\\solr-8.11.2\\example\\exampledocs\\Welcome.pdf';
-    const solrUrl = 'http://localhost:8983/solr/v10/update/extract?literal.id=doc920&commit=true';
-    
-    const formData = new FormData();
-    formData.append('myfile', fs.createReadStream(filePath));
-    
-    axios.post(solrUrl, formData, {
-      headers: {
-        ...formData.getHeaders(),
-      },
-    })
-      .then(response => {
-        console.log('Respuesta de Solr:', response.data);
-      })
-      .catch(error => {
-        console.error('Error al enviar el archivo a Solr:', error);
-      });
   }

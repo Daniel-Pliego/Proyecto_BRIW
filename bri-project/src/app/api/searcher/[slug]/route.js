@@ -4,7 +4,7 @@ import { Query } from "solr-client";
 const solrUrl = returnURLcore();
 
 //http://localhost:8983/solr/Prueba10/select?facet.field=category&facet.limit=10&facet=true&indent=true&q.op=OR&q=*%3A*
-//http://localhost:3000/searcher/search?query=hello
+//http://localhost:3000/api/searcher/search?query=hello
 export async function GET(request, { params }) {
     var result;
     const searchParams = request.nextUrl.searchParams
@@ -34,7 +34,12 @@ function removeAccents(accentedPhrase) {
 }
 
 async function addSearcherOperation(word, tokenPrevious, query) {
-    query += tokenPrevious + " (" + generateSimilarWordsQuery(await similarWords(word)) + ") ";
+    var similarWordsResult = await similarWords(word);
+    if (similarWordsResult && similarWordsResult.length > 0) {
+        query += tokenPrevious + " (" + generateSimilarWordsQuery(similarWordsResult) + ") ";
+    } else {
+        query += tokenPrevious + " (" + generateSimilarWordsQuery(word) + ") ";
+    }
     return query;
 }
 
@@ -46,7 +51,13 @@ async function makeBooleanQuery(userInput) {
 
     let tokens = userInput.split(" ");
 
-    query += "(" + generateSimilarWordsQuery(await similarWords(tokens[0])) + ") ";
+    var similarWordsResult = await similarWords(tokens[0]);
+    if (similarWordsResult && similarWordsResult.length > 0) {
+        query += "(" + generateSimilarWordsQuery(similarWordsResult) + ") ";
+    } else {
+        query += "(" + generateSimilarWordsQuery(tokens[0]) + ")";
+    }
+
     let tokenPrevious = "elemento";
 
     for (let i = 1; i < tokens.length; i++) {
@@ -129,8 +140,14 @@ async function makePhraseQuery(queryToSearch) {
     if (queryToSearch === "*:*") {
         query = "*:*";
     } else {
-        query += "(" + generateSimilarWordsQuery(await similarWords(queryToSearch)) + ")";
+        var similarWordsResult = await similarWords(queryToSearch);
+        if (similarWordsResult && similarWordsResult.length > 0) {
+            query += "(" + generateSimilarWordsQuery(similarWordsResult) + ")";
+        } else {
+            query += "(" + generateSimilarWordsQuery([queryToSearch]) + ")";
+        }
     }
+    console.log(query);
     const searchUrl = `${solrUrl}/select?indent=true&q.op=OR&q=${fixedEncodeURIComponent(query)}&facet=true&facet.field=${"category"}&facet.limit=${10}&rows=1000&sort=score+desc&fl=*,+score`;
     console.log(searchUrl);
     try {
