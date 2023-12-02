@@ -1,23 +1,22 @@
-// Si no tienen configurado sus variables de entorno, deben estar en la carpeta de los archiivos de Solr
+// Si no tienen configurado sus variables de entorno para Solr
+// deben estar en la carpeta de los archivos de Solr para ejecutar el siguiente comando
 
 /* Crear core con lo archivos de configuración*/ 
 bin/solr create_core -c MiNucleo -d <solr-config>
-solr create_core -c Prueba4 -d C:\Users\jonat\OneDrive\Documentos\7toSemestre\busquedaWeb\Proyecto_BRIW\solr-config
+solr create_core -c v2 -d C:\Users\jonat\OneDrive\Documentos\7toSemestre\busquedaWeb\Proyecto_BRIW\solr-config
 
 
 /*Iniciar solr*/
 bin/solr start
 
-
 /*Parar solr*/
 solr stop -all
 
+Cambiar puerto de solr, además de colocar el nombre del core
+    /solrClient/solr.js
 
-/*Cambiar puerto de solr en el proyecto*/
-storage.js linea 8
 
-
-/*Ubicación del core*/
+/*Ubicación del core, luego de haberlo creado*/
 En la carpeta de los archivos de solr
     | server
         | solr 
