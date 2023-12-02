@@ -33,7 +33,7 @@ function removeAccents(accentedPhrase) {
     return accentedPhrase.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 }
 
-async function addWord(word, tokenPrevious, query) {
+async function addSearcherOperation(word, tokenPrevious, query) {
     query += tokenPrevious + " (" + generateSimilarWordsQuery(await similarWords(word)) + ") ";
     return query;
 }
@@ -62,7 +62,7 @@ async function makeBooleanQuery(userInput) {
                 tokenPrevious = "NOT";
                 break;
             default:
-                query = await addWord(token, tokenPrevious, query);
+                query = await addSearcherOperation(token, tokenPrevious, query);
                 tokenPrevious = "elemento";
                 break;
         }
