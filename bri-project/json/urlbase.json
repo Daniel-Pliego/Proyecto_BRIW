@@ -6,7 +6,12 @@
     },
     {
         "name": "url2",
-        "url": "https://es.wikipedia.org/wiki/Amazon",
-        "visited": true
+        "url": "https://www.matematicas.uady.mx/",
+        "visited": false
+    },
+    {
+        "name": "url3",
+        "url": "https://cobay.yucatan.gob.mx/",
+        "visited": false
     }
 ]

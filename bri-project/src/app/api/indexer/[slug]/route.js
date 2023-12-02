@@ -13,7 +13,12 @@ export async function GET(request, { params }) {
         const slug = params.slug;
         if(slug === 'index'){
             await initCrawler();
-            return Response.json({ helo:"indexado" });
+            return new Response(
+              JSON.stringify({ message: "Files uploaded successfully" }),
+              {
+                headers: { "Content-Type": "application/json" },
+              }
+            );
         }else if(slug === 'read'){
           try {
             const jsonData = await fsPromises.readFile(dataFilePath);

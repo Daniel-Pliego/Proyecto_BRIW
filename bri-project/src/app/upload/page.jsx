@@ -15,7 +15,13 @@ export default function uploadPage() {
     setFiles(newFiles);
   };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: {
+      'application/pdf': ['.pdf'],
+      'application/msword': ['.doc', '.docx'],
+    },
+    onDrop
+  });
 
   const saveFilesToLocalFolder = async () => {
     const formData = new FormData();
