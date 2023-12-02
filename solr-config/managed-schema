@@ -31,14 +31,22 @@
    <field name="links" type="string" indexed="true" stored="true" multiValued="true"/>
    <field name="_src_" type="string" indexed="false" stored="true"/>
   
-  <field name="content" type="text_general" indexed="false" stored="true" multiValued="true"/>
+  <field name="content" type="text_general" indexed="true" stored="true" multiValued="true">
+  <analyzer>
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
+        <!-- Otros filtros que puedas necesitar -->
+        <filter class="solr.PatternReplaceFilterFactory" pattern="\s+" replacement=" " replace="all" />
+        <filter class="solr.PatternReplaceFilterFactory" pattern="(\n)" replacement=" " replace="all" />
+    </analyzer>
+  </field>
   <field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>
   
-    <copyField source="title2" dest="text"/>
+  <copyField source="content" dest="text"/>
+  <copyField source="title2" dest="text"/>
    <copyField source="author" dest="text"/>
    <copyField source="description" dest="text"/>
    <copyField source="keywords" dest="text"/>
-   <copyField source="content" dest="text"/>
    <copyField source="content_type" dest="text"/>
    <copyField source="resourcename" dest="text"/>
    <copyField source="url2" dest="text"/>
