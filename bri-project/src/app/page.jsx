@@ -65,6 +65,7 @@ export default function Home() {
                 className="w-full py-2 mr-3 focus:outline-none"
                 value={searchQuery}
                 onChange={handleInputChange}
+                autoComplete="off"
               />
             </div>
             {searchQuery.length > 0 && (
