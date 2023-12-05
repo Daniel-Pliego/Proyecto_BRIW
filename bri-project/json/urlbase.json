@@ -1,17 +1,1 @@
-[
-    {
-        "name": "url1",
-        "url": "https://www.wagslane.dev/",
-        "visited": false
-    },
-    {
-        "name": "url2",
-        "url": "https://www.matematicas.uady.mx/",
-        "visited": false
-    },
-    {
-        "name": "url3",
-        "url": "https://cobay.yucatan.gob.mx/",
-        "visited": false
-    }
-]
+[{"name":"url1","url":"https://www.wagslane.dev/","visited":true},{"name":"url2","url":"https://www.matematicas.uady.mx/","visited":true},{"name":"url3","url":"https://cobay.yucatan.gob.mx/","visited":true}]
