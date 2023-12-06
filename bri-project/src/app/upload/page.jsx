@@ -17,10 +17,10 @@ export default function uploadPage() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
-      'application/pdf': ['.pdf'],
-      'application/msword': ['.doc', '.docx'],
+      "application/pdf": [".pdf"],
+      "application/msword": [".doc", ".docx"],
     },
-    onDrop
+    onDrop,
   });
 
   const saveFilesToLocalFolder = async () => {
@@ -78,11 +78,11 @@ export default function uploadPage() {
       </div>
       <div className="mt-4">
         <button
-          className="px-4 py-2 text-white bg-green-500 rounded"
+          className="px-4 py-2 text-white bg-indigo-500 rounded"
           onClick={saveFilesToLocalFolder}
           disabled={files.length === 0}
         >
-          Save Files to Local Folder
+          Guardar archivos localmente
         </button>
       </div>
     </div>
