@@ -14,11 +14,7 @@ export default function Home() {
     filterWord: "",
     type: "",
   });
-
-  const handleInputChange = (event) => {
-    const query = event.target.value;
-    setSearchQuery(query);
-  };
+  const [openAICorrection, setOpenAICorrection] = useState("");
 
   useEffect(() => {
     if (searchQuery.length >= 3) {
@@ -30,8 +26,18 @@ export default function Home() {
     }
   }, [searchQuery]);
 
+  const handleInputChange = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+  };
+
   const handleSubmit = () => {
-    axios
+    getSearch();
+    setOpenAICorrection(getOpenAICorrection());
+  };
+
+  const getSearch = async () => {
+    await axios
       .get(`/api/searcher/search?query=${searchQuery}`)
       .then((res) => {
         setData(res.data);
@@ -43,6 +49,12 @@ export default function Home() {
       .finally(() => {
         setSearchQuery("");
       });
+  };
+
+  const getOpenAICorrection = async () => {
+    let result = await axios.post("/api/openAI", { query: searchQuery });
+    console.log(result);
+    return result.data;
   };
 
   const handleFilter = (filterWord, type) => {
@@ -90,6 +102,20 @@ export default function Home() {
               />
             )}
           </div>
+          {openAICorrection != "" && (
+            <span className="text-sm text-indigo-300">
+              ¿Quizás quisiste decir?{" "}
+              <span
+                className="underline cursor-pointer"
+                onClick={() => {
+                  setSearchQuery(openAICorrection);
+                  handleSubmit();
+                }}
+              >
+                {openAICorrection}
+              </span>
+            </span>
+          )}
         </form>
         <div className="flex justify-center w-full">
           <div className="flex flex-col w-full gap-2">
@@ -103,16 +129,16 @@ export default function Home() {
                 </p>
               </div>
             ) : (
-              data.response?.docs.map((doc) => {
+              data.response?.docs.map((doc, index) => {
                 if (filter.filterWord.length > 0) {
                   if (filter.type === "category") {
                     if (doc.category.includes(filter.filterWord))
-                      return <ResultCard {...{ data: doc }} />;
+                      return <ResultCard key={index} {...{ data: doc }} />;
                   } else if (filter.type === "domain") {
                     if (new URL(doc.url).hostname === filter.filterWord)
-                      return <ResultCard {...{ data: doc }} />;
+                      return <ResultCard key={index} {...{ data: doc }} />;
                   }
-                } else return <ResultCard {...{ data: doc }} />;
+                } else return <ResultCard key={index} {...{ data: doc }} />;
               })
             )}
           </div>
