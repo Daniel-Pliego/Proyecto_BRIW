@@ -144,7 +144,7 @@ async function makePhraseQuery(queryToSearch) {
         if (similarWordsResult && similarWordsResult.length > 0) {
             query += "(" + generateSimilarWordsQuery(similarWordsResult) + ")";
         } else {
-            query += "(" + generateSimilarWordsQuery([queryToSearch]) + ")";
+            query += "(" + generateSimilarWordsQuery(getListOfWordFromSentence(queryToSearch)) + ")";
         }
     }
     console.log(query);
@@ -158,4 +158,24 @@ async function makePhraseQuery(queryToSearch) {
     } catch (error) {
         console.error('Error al realizar la consulta a Solr:', error);
     }
+}
+
+function getListOfWordFromSentence(params) {
+    var sentenceWithoutAccents = removeAccents(params);
+    var sentenceWithoutPuntation = removePunctuation(sentenceWithoutAccents);
+    var words = sentenceWithoutPuntation.split(" ");
+    var wordsWithoutStopwords = removeStopwords(words);
+    return wordsWithoutStopwords;
+}
+
+function removePunctuation(inputString) {
+    const cleanedString = inputString.replace(/[?,.]/g, '');
+    return cleanedString;
+}
+
+const stopwords = ['en', 'que', 'la', 'lo', 'le', 'son', 'los'];
+
+function removeStopwords(words) {
+    const filteredWords = words.filter(word => !stopwords.includes(word.toLowerCase()));
+    return filteredWords;
 }
