@@ -15,6 +15,10 @@ export default function Home() {
     type: "",
   });
   const [openAICorrection, setOpenAICorrection] = useState("");
+  const [isLoading, setIsLoading] = useState({
+    searchBar: false,
+    correction: false,
+  });
 
   useEffect(() => {
     if (searchQuery.length >= 3) {
@@ -31,14 +35,18 @@ export default function Home() {
     setSearchQuery(query);
   };
 
-  const handleSubmit = () => {
-    getSearch();
-    setOpenAICorrection(getOpenAICorrection());
+  const handleSubmit = async (query) => {
+    setIsLoading({ searchBar: true, correction: true });
+    getSearch(query || searchQuery);
+    setIsLoading({ searchBar: false, correction: true });
+    let correction = await getOpenAICorrection(query || searchQuery);
+    setOpenAICorrection(correction);
+    setIsLoading({ searchBar: false, correction: false });
   };
 
-  const getSearch = async () => {
+  const getSearch = async (query) => {
     await axios
-      .get(`/api/searcher/search?query=${searchQuery}`)
+      .get(`/api/searcher/search?query=${query}`)
       .then((res) => {
         setData(res.data);
       })
@@ -51,10 +59,18 @@ export default function Home() {
       });
   };
 
-  const getOpenAICorrection = async () => {
-    let result = await axios.post("/api/openAI", { query: searchQuery });
-    console.log(result);
-    return result.data;
+  const getOpenAICorrection = async (query) => {
+    try {
+      if (query.length > 3) {
+        let result = await axios.post("/api/openAI", { query });
+        console.log(result.data);
+        return result.data;
+      }
+      return "";
+    } catch (error) {
+      console.log(error);
+      return "";
+    }
   };
 
   const handleFilter = (filterWord, type) => {
@@ -70,15 +86,38 @@ export default function Home() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleSubmit(e);
+            handleSubmit();
           }}
           className="flex flex-col items-center justify-between w-full pb-8"
         >
           <div className="w-1/2 bg-white border-2 border-indigo-300 focus-within:shadow focus-within:shadow-indigo-400 rounded-3xl overflow-clip">
             <div className="flex items-center justify-between">
-              <span className="material-symbols-outlined text-[20px] px-2">
-                search
-              </span>
+              {!isLoading.searchBar ? (
+                <span className="material-symbols-outlined text-[20px] px-2">
+                  search
+                </span>
+              ) : (
+                <svg
+                  class="animate-spin  mx-2 h-5 w-5 text-indigo-600"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              )}
               <input
                 id="query"
                 name="query"
@@ -90,27 +129,45 @@ export default function Home() {
                 autoComplete="off"
               />
             </div>
-            {searchQuery.length > 0 && (
+            {searchQuery.length > 0 && suggestions.length > 0 && (
               <SearchSuggestions
                 {...{
                   suggestions,
-                  onSelectSuggestion: (suggestion) => {
-                    setSearchQuery(suggestion);
-                    handleSubmit();
-                  },
+                  onSelectSuggestion: (suggestion) => handleSubmit(suggestion),
                 }}
               />
             )}
           </div>
+          {isLoading.correction && (
+            <span>
+              <svg
+                class="animate-spin  mx-4 h-4 w-3 text-indigo-600"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            </span>
+          )}
           {openAICorrection != "" && (
             <span className="text-sm text-indigo-300">
-              ¿Quizás quisiste decir?{" "}
+              ¿Quizás quisiste decir?
               <span
                 className="underline cursor-pointer"
-                onClick={() => {
-                  setSearchQuery(openAICorrection);
-                  handleSubmit();
-                }}
+                onClick={() => handleSubmit(openAICorrection)}
               >
                 {openAICorrection}
               </span>
