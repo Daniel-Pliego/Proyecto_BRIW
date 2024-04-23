@@ -1,11 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-export default function SideMenu({ data, setFilter, filter }) {
+export default function SideMenu ({ data, setFilter, filter }) {
   const [facets, setfacets] = useState({});
-  const stopwords = ["are", "not", "-ive"];
+  
 
   useEffect(() => {
+    const stopwords = ["are", "not", "-ive"];
     if (data != null && data.facet_counts != null) {
       const rawCategories = data.facet_counts.facet_fields.category;
       let categories = arrayToObject(rawCategories);
@@ -38,7 +39,7 @@ export default function SideMenu({ data, setFilter, filter }) {
     return obj;
   };
 
-  function countOccurrences(arr) {
+  function countOccurrences (arr) {
     const result = {};
 
     arr.forEach((str) => {

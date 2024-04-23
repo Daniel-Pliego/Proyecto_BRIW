@@ -4,7 +4,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export async function POST(request) {
+export async function POST (request) {
   let { query } = await request.json();
   let result = "yes";
 
