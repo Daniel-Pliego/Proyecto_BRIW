@@ -5,7 +5,7 @@ const solrUrl = returnURLcore();
 
 //http://localhost:8983/solr/Prueba10/select?facet.field=category&facet.limit=10&facet=true&indent=true&q.op=OR&q=*%3A*
 //http://localhost:3000/api/searcher/search?query=hello
-export async function GET(request, { params }) {
+export async function GET (request, { params }) {
     var result;
     const searchParams = request.nextUrl.searchParams
     const slug = params.slug;
@@ -29,11 +29,11 @@ export async function GET(request, { params }) {
     }
 }
 
-function removeAccents(accentedPhrase) {
+function removeAccents (accentedPhrase) {
     return accentedPhrase.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 }
 
-async function addSearcherOperation(word, tokenPrevious, query) {
+async function addSearcherOperation (word, tokenPrevious, query) {
     var similarWordsResult = await similarWords(word);
     if (similarWordsResult && similarWordsResult.length > 0) {
         query += tokenPrevious + " (" + generateSimilarWordsQuery(similarWordsResult) + ") ";
@@ -43,7 +43,7 @@ async function addSearcherOperation(word, tokenPrevious, query) {
     return query;
 }
 
-async function makeBooleanQuery(userInput) {
+async function makeBooleanQuery (userInput) {
     var querySolr = `${solrUrl}` + '/select?indent=true&q.op=OR&q=';
 
     userInput = userInput.toLocaleLowerCase('es');
@@ -93,13 +93,13 @@ async function makeBooleanQuery(userInput) {
     }
 }
 
-function fixedEncodeURIComponent(str) { //*Para codificar inclusive caracteres que no codifica el encode normal
+function fixedEncodeURIComponent (str) { //*Para codificar inclusive caracteres que no codifica el encode normal
     return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
         return '%' + c.charCodeAt(0).toString(16);
     });
 }
 
-function generateSimilarWordsQuery(terms) {
+function generateSimilarWordsQuery (terms) {
     var query = "";
     let op = "OR";
     for (let i = 0; i < terms.length; i++) {
@@ -113,7 +113,7 @@ function generateSimilarWordsQuery(terms) {
     return query;
 }
 
-async function getSimilarMatrix(array, noun) {
+async function getSimilarMatrix (array, noun) {
     let max = 20 - noun.length;
     let response = await fetch(
         `https://api.datamuse.com/words?ml=${noun}&v=es&max=${max}`
@@ -128,14 +128,14 @@ async function getSimilarMatrix(array, noun) {
     return array;
 }
 
-async function similarWords(noun) { //* Por palabra
+async function similarWords (noun) { //* Por palabra
     var similar = [];
     similar = await getSimilarMatrix(similar, noun);
     console.log("ARRAY:> " + similar + "\n"); //! Muestra los sinonimos de una palabra, quitar antes de terminar proyecto
     return similar; //* Array de palabras similares a la palabra original
 }
 
-async function makePhraseQuery(queryToSearch) {
+async function makePhraseQuery (queryToSearch) {
     var query = "";
     if (queryToSearch === "*:*") {
         query = "*:*";
@@ -160,7 +160,7 @@ async function makePhraseQuery(queryToSearch) {
     }
 }
 
-function getListOfWordFromSentence(params) {
+function getListOfWordFromSentence (params) {
     var sentenceWithoutAccents = removeAccents(params);
     var sentenceWithoutPuntation = removePunctuation(sentenceWithoutAccents);
     var words = sentenceWithoutPuntation.split(" ");
@@ -168,14 +168,14 @@ function getListOfWordFromSentence(params) {
     return wordsWithoutStopwords;
 }
 
-function removePunctuation(inputString) {
+function removePunctuation (inputString) {
     const cleanedString = inputString.replace(/[?,.]/g, '');
     return cleanedString;
 }
 
 const stopwords = ['en', 'que', 'la', 'lo', 'le', 'son', 'los'];
 
-function removeStopwords(words) {
+function removeStopwords (words) {
     const filteredWords = words.filter(word => !stopwords.includes(word.toLowerCase()));
     return filteredWords;
 }

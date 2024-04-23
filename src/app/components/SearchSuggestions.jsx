@@ -1,6 +1,6 @@
 import React from "react";
 
-export function SearchSuggestions({ suggestions, onSelectSuggestion }) {
+export function SearchSuggestions ({ suggestions, onSelectSuggestion }){
   return (
     <ul className="flex flex-col py-2 list-none">
       {suggestions.map((suggestion, index) => (

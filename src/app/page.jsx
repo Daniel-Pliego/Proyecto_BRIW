@@ -6,7 +6,7 @@ import ResultCard from "./components/ResultCard";
 import { SearchSuggestions } from "./components/SearchSuggestions";
 import SideMenu from "./components/SideMenu";
 
-export default function Home() {
+export default function Home () {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [data, setData] = useState({});

@@ -9,7 +9,8 @@ const dataFilePath = path.join(process.cwd(), 'json/urlbase.json');
 
 // query is "hello" for /api/search?query=hello
   //http://localhost:3000/indexer/read
-export async function GET(request, { params }) {
+export async function GET (request, { params }) {
+  
         const slug = params.slug;
         if(slug === 'index'){
             await initCrawler();
@@ -31,7 +32,7 @@ export async function GET(request, { params }) {
         }
 }
 
-export async function POST(request, { params }) {
+export async function POST (request, { params }) {
     try {
         const res = await request.json()
         const slug = params.slug;
@@ -43,4 +44,4 @@ export async function POST(request, { params }) {
         console.error(error);
         return Response.json({ message: "Error al actualizar los datos" });
       }
-  }
+}

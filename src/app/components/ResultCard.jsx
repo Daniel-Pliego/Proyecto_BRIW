@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ResultCard({ data }) {
+export default function ResultCard ({ data }) {
   return (
     <div className="flex flex-col w-full p-4 text-sm bg-wte">
       <h2 className="text-lg">{data.title}</h2>
