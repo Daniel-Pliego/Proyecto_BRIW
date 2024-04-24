@@ -1,7 +1,7 @@
 //https://nextjs.org/docs/app/building-your-application/routing/route-handlers
 //https://dev.to/this-is-learning/readwrite-on-local-json-file-with-nextjs-part-51-8gg
 
-import {initCrawler} from "public/script/crawler/crawler.js";
+import {initCrawler} from "../../../../../public/script/crawler/crawler.js";
 import fsPromises from 'fs/promises';
 import path from 'path';
 
@@ -10,7 +10,7 @@ const dataFilePath = path.join(process.cwd(), 'json/urlbase.json');
 // query is "hello" for /api/search?query=hello
   //http://localhost:3000/indexer/read
 export async function GET (request, { params }) {
-  
+        
         const slug = params.slug;
         if(slug === 'index'){
             await initCrawler();

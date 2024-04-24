@@ -1,0 +1,49 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Setup Node.js
+        uses : actions/setup-node@v2
+        with:
+          node-version: '20.11.1'
+
+      - name: Create solr-core image
+        run: docker build -t solr-core .
+
+      - name: Start solr container
+        run: docker run -d --name solrPrueba1 -p 8983:8983 solr-core
+
+      - name: Wait solr
+        run: docker exec solrPrueba1 solr status
+        timeout-minutes: 5
+
+      - name: Create Core
+        run: docker exec solrPrueba1 solr create_core -c v2 -d /opt/solr/server/solr/configsets/solr-config
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run integration tests
+        run: npm run test
+
+      - name: Stop containers
+        if: always()
+        run: docker stop solrPrueba1
