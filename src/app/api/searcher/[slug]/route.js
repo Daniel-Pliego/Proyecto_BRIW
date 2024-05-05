@@ -1,10 +1,10 @@
-import { split } from "postcss/lib/list";
+
 import { returnURLcore } from "public/script/solrClient/solr.js";
-import { Query } from "solr-client";
+import { returnTokens, fixedEncodeURIComponent } from "public/script/searcher/tokenizer.js"
+import { returnSynonyms } from "public/script/searcher/expander.js"
+
 const solrUrl = returnURLcore();
 
-//http://localhost:8983/solr/Prueba10/select?facet.field=category&facet.limit=10&facet=true&indent=true&q.op=OR&q=*%3A*
-//http://localhost:3000/api/searcher/search?query=hello
 export async function GET (request, { params }) {
     var result;
     const searchParams = request.nextUrl.searchParams
@@ -15,167 +15,106 @@ export async function GET (request, { params }) {
         if (!query) {
             return Response.json({ hello: 'no query' });
         } else {
-            const isBooleanQuery = query.includes('AND') || query.includes('OR') || query.includes('NOT');
-
-            if (isBooleanQuery) {
-                result = await makeBooleanQuery(query);
-            } else {
-                result = await makePhraseQuery(query);
-            }
-
+            const solQuery = await buildQuery(query)
+            result = await searchDocuments(solQuery)
             return Response.json(result);
-            //return Response.json({ hello: query });
         }
     }
 }
 
-function removeAccents (accentedPhrase) {
-    return accentedPhrase.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+function isAcceptedOperator (word) {
+    return word == "not" || word == "and" || word == "or"
 }
+async function addSearchingOperator(word, tokenPrevious, query, lang) {
+    var similarWordsResult = []
+    if (lang != 'notFound') {
+        similarWordsResult = await returnSynonyms(word, lang)
+    }
 
-async function addSearcherOperation (word, tokenPrevious, query) {
-    var similarWordsResult = await similarWords(word);
-    if (similarWordsResult && similarWordsResult.length > 0) {
-        query += tokenPrevious + " (" + generateSimilarWordsQuery(similarWordsResult) + ") ";
+    if (similarWordsResult == null && !isAcceptedOperator(word)) {
+        return query
+    }
+    console.log("Synonyms:> " + similarWordsResult + "\n");
+
+    if (typeof query === "string" && query.length === 0 && !isAcceptedOperator) { //* for next word if previous was stopword
+        tokenPrevious = ""
+    }
+
+    if (similarWordsResult.length > 0) {
+        query += tokenPrevious + "(" + generateSimilarWordsQuery(similarWordsResult) + ")";
     } else {
-        query += tokenPrevious + " (" + generateSimilarWordsQuery(word) + ") ";
+        query += tokenPrevious + "(" + generateSimilarWordsQuery(word) + ")";
     }
     return query;
 }
 
-async function makeBooleanQuery (userInput) {
-    var querySolr = `${solrUrl}` + '/select?indent=true&q.op=OR&q=';
-
-    userInput = userInput.toLocaleLowerCase('es');
+async function buildQuery (userInput) {
     var query = "";
-
-    let tokens = userInput.split(" ");
-
-    var similarWordsResult = await similarWords(tokens[0]);
-    if (similarWordsResult && similarWordsResult.length > 0) {
-        query += "(" + generateSimilarWordsQuery(similarWordsResult) + ") ";
+    if (userInput === "*:*") { //*get every document
+        query = "*:*";
     } else {
-        query += "(" + generateSimilarWordsQuery(tokens[0]) + ")";
-    }
+        let tokensDict = await returnTokens(userInput)
+        console.log(tokensDict)
+        let language = tokensDict["language"]
+        let tokens = tokensDict["tokens"]
 
-    let tokenPrevious = "elemento";
+        let tokenPrevious = "";
 
-    for (let i = 1; i < tokens.length; i++) {
-        let token = tokens[i];
-        switch (token) {
-            case "and":
-                tokenPrevious = "AND";
-                break;
-            case "or":
-                tokenPrevious = "OR";
-                break;
-            case "not":
-                tokenPrevious = "NOT";
-                break;
-            default:
-                query = await addSearcherOperation(token, tokenPrevious, query);
-                tokenPrevious = "elemento";
-                break;
+        for (let i = 0; i < tokens.length; i++) {
+            let token = tokens[i];
+            switch (token) {
+                case "and":
+                    tokenPrevious = " AND ";
+                    break;
+                case "or":
+                    tokenPrevious = " OR ";
+                    break;
+                case "not":
+                    tokenPrevious = " NOT ";
+                    break;
+                default:
+                    query = await addSearchingOperator(token, tokenPrevious, query, language);
+                    tokenPrevious = " OR ";
+                    break;
+            }
         }
-    }
 
+    }
+    console.log("Query:> " + query + "\n");
+    return query
+}
+
+async function searchDocuments (query) {
+    var querySolr = `${solrUrl}` + '/select?indent=true&q.op=OR&q=';
     let scoreSortDescendant = "&sort=score+desc&fl=*,+score";
 
-    querySolr = querySolr + fixedEncodeURIComponent(query) + `&facet=true&facet.field=${"category"}&facet.limit=${10}&rows=1000` + scoreSortDescendant;
-    console.log(querySolr);
+    const searchUrl = querySolr + fixedEncodeURIComponent(query) + `&facet=true&facet.field=${"category"}&facet.limit=${10}&rows=1000` + scoreSortDescendant;
+
+    console.log("QuerySolrCalled:>\n" + searchUrl);
     try {
-        const response = await fetch(querySolr);
-        const data = await response.text();  // Obtener la respuesta como texto
+        const response = await fetch(searchUrl);
+        const data = await response.text();
         const jsonData = JSON.parse(data);
         return jsonData;
     } catch (error) {
         console.error('Error al realizar la consulta a Solr:', error);
     }
-}
-
-function fixedEncodeURIComponent (str) { //*Para codificar inclusive caracteres que no codifica el encode normal
-    return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
-        return '%' + c.charCodeAt(0).toString(16);
-    });
 }
 
 function generateSimilarWordsQuery (terms) {
     var query = "";
     let op = "OR";
-    for (let i = 0; i < terms.length; i++) {
-        if (i == 0 || i == terms.length) {
-            query += 'title:' + terms[i] + ' ' + op + ' category:' + terms[i] + ' ' + op + ' metaDescription:' + terms[i];
-        } else {
-            query += ' ' + op + ' title:' + terms[i] + ' ' + op + ' category:' + terms[i] + ' ' + op + ' metaDescription:' + terms[i];
+
+    if (Array.isArray(terms)) {
+        for (let i = 0; i < terms.length; i++) {
+            if (i == 0 || i == terms.length) {
+                query += 'title:' + terms[i] + '~1 ' + op + ' category:' + terms[i] + '~1 ' + op + ' metaDescription:' + terms[i] + '~1';
+            } else {
+                query += ' ' + op + ' title:' + terms[i] + '~1 ' + op + ' category:' + terms[i] + '~1 ' + op + ' metaDescription:' + terms[i] + "~1";
+            }
         }
-    }
-    query = removeAccents(query);
-    return query;
-}
-
-async function getSimilarMatrix (array, noun) {
-    let max = 20 - noun.length;
-    let response = await fetch(
-        `https://api.datamuse.com/words?ml=${noun}&v=es&max=${max}`
-    );
-
-    if (response.ok) {
-        let json = await response.json();
-        json.forEach(result => {
-            array.push(result["word"]);
-        });
-    }
-    return array;
-}
-
-async function similarWords (noun) { //* Por palabra
-    var similar = [];
-    similar = await getSimilarMatrix(similar, noun);
-    console.log("ARRAY:> " + similar + "\n"); //! Muestra los sinonimos de una palabra, quitar antes de terminar proyecto
-    return similar; //* Array de palabras similares a la palabra original
-}
-
-async function makePhraseQuery (queryToSearch) {
-    var query = "";
-    if (queryToSearch === "*:*") {
-        query = "*:*";
     } else {
-        var similarWordsResult = await similarWords(queryToSearch);
-        if (similarWordsResult && similarWordsResult.length > 0) {
-            query += "(" + generateSimilarWordsQuery(similarWordsResult) + ")";
-        } else {
-            query += "(" + generateSimilarWordsQuery(getListOfWordFromSentence(queryToSearch)) + ")";
-        }
+        query += 'title:' + terms + '~1 ' + op + ' category:' + terms + '~1 ' + op + ' metaDescription:' + terms + '~1';
     }
-    console.log(query);
-    const searchUrl = `${solrUrl}/select?indent=true&q.op=OR&q=${fixedEncodeURIComponent(query)}&facet=true&facet.field=${"category"}&facet.limit=${10}&rows=1000&sort=score+desc&fl=*,+score`;
-    console.log(searchUrl);
-    try {
-        const response = await fetch(searchUrl);
-        const data = await response.text();  // Obtener la respuesta como texto
-        const jsonData = JSON.parse(data);
-        return jsonData;
-    } catch (error) {
-        console.error('Error al realizar la consulta a Solr:', error);
-    }
-}
-
-function getListOfWordFromSentence (params) {
-    var sentenceWithoutAccents = removeAccents(params);
-    var sentenceWithoutPuntation = removePunctuation(sentenceWithoutAccents);
-    var words = sentenceWithoutPuntation.split(" ");
-    var wordsWithoutStopwords = removeStopwords(words);
-    return wordsWithoutStopwords;
-}
-
-function removePunctuation (inputString) {
-    const cleanedString = inputString.replace(/[?,.]/g, '');
-    return cleanedString;
-}
-
-const stopwords = ['en', 'que', 'la', 'lo', 'le', 'son', 'los'];
-
-function removeStopwords (words) {
-    const filteredWords = words.filter(word => !stopwords.includes(word.toLowerCase()));
-    return filteredWords;
+    return query;
 }
