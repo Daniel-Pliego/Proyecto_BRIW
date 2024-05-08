@@ -12,6 +12,9 @@ export const Navbar = () => {
       <Link className="p-2 px-4 rounded-lg hover:bg-indigo-700" href="/upload">
         Subir archivos
       </Link>
+      <Link className="p-2 px-4 rounded-lg hover:bg-indigo-700" href="/search">
+        Perfiles de busqueda
+      </Link>
     </nav>
   );
 };

@@ -4,7 +4,7 @@
 /* Crear core con lo archivos de configuración*/ 
 bin/solr create_core -c MiNucleo -d <solr-config>
 solr create_core -c v2 -d C:\Users\jonat\OneDrive\Documentos\7toSemestre\busquedaWeb\Proyecto_BRIW\solr-config
-
+solr create_core -c v2 -d D:\Documentos\Clean_Architecture\Proyecto_BRIW\solr-config
 
 /*Iniciar solr*/
 bin/solr start
