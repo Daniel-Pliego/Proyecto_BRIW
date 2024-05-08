@@ -31,7 +31,7 @@ export async function GET (request, { params }) {
 function isAcceptedOperator (word) {
     return word == "not" || word == "and" || word == "or"
 }
-async function addSearchingOperator(word, tokenPrevious, query, lang) {
+async function addSearchingOperator (word, tokenPrevious, query, lang) {
     var similarWordsResult = []
     if (lang != 'notFound') {
         similarWordsResult = await returnSynonyms(word, lang)
