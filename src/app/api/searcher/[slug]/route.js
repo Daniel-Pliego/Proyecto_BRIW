@@ -1,7 +1,6 @@
-
-import { returnURLcore } from "public/script/solrClient/solr.js";
-import { returnTokens, fixedEncodeURIComponent } from "public/script/searcher/tokenizer.js"
-import { returnSynonyms } from "public/script/searcher/expander.js"
+import { returnURLcore } from "../../../../../public/script/solrClient/solr.js";
+import { returnTokens, fixedEncodeURIComponent } from "../../../../../public/script/searcher/tokenizer.js"
+import { returnSynonyms } from "../../../../../public/script/searcher/expander.js"
 
 const solrUrl = returnURLcore();
 
@@ -10,8 +9,15 @@ export async function GET (request, { params }) {
     const searchParams = request.nextUrl.searchParams
     const slug = params.slug;
     if (slug === 'search') {
-        console.log(searchParams);
-        const query = searchParams.get('query')
+        console.log(searchParams)
+        let query = ""
+        if(searchParams.query){
+            query = searchParams['query']
+        } else {
+            query = searchParams.get('query')
+        }
+        
+
         if (!query) {
             return Response.json({ hello: 'no query' });
         } else {
