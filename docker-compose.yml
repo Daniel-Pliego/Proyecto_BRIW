@@ -8,6 +8,7 @@ services:
       - data:/var/solr
       - ./solr-config-linux:/opt/solr/server/solr/configsets/solr-config
       - ./solr-config-linux:/var/solr/data/configsets/solr-config
+      
     command: ["solr", "-f", "create_core", "-c", "v2"]
     networks:
       - mi-red-docker
