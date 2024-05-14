@@ -7,19 +7,17 @@ export default function SearchProfiles(){
     const [profiles, setProfiles] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    //const firstQuery = "SELECT * FROM briw.urls_consulta WHERE perfil_busqueda_id IN (SELECT id FROM briw.perfiles_busqueda WHERE usuario_id = 1) order by perfil_busqueda_id;";
-    const firstQuery = "SELECT urls.*, perfiles.nombre AS nombre_perfil_busqueda " +
-                        "FROM urls_consulta AS urls " +
-                        "RIGHT JOIN perfiles_busqueda AS perfiles ON urls.perfil_busqueda_id = perfiles.id " +
-                        "WHERE perfiles.usuario_id = 1 " +
-                        "ORDER BY urls.perfil_busqueda_id;";
+    const firstQuery = "SELECT urls.*, profiles.name AS profile_name " +
+                        "FROM urls " +
+                        "RIGHT JOIN users_profiles AS profiles ON urls.id_profile = profiles.id " +
+                        "WHERE profiles.id_user = 1 " +
+                        "ORDER BY urls.id_profile;";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await fetch("/server", {
                     method: "POST",
-                    //body: "SELECT * FROM perfiles_busqueda where usuario_id = 1", //debe cambiar el usuario_id por el id del usuario logueado
                     body: firstQuery,
                 });
                 if (response.ok) {

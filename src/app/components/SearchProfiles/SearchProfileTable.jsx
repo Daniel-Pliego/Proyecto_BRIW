@@ -15,12 +15,12 @@ import { HandlerEdit, HandlerDetele } from '../HandlerCommand';
 
 function groupProfiles(array) {
   return array.reduce((groups, elemento) => {
-    const existingGroup = groups.find(group => group[0].perfil_busqueda_id === elemento.perfil_busqueda_id);
+    const existingGroup = groups.find(group => group[0].id_profile === elemento.id_profile);
     if (existingGroup) {
       existingGroup.push(elemento);
     } else {
       const nuevoGrupo = [elemento];
-      nuevoGrupo.nombre_perfil_busqueda = `${elemento.nombre_perfil_busqueda}`;
+      nuevoGrupo.profile_name = `${elemento.profile_name}`;
       groups.push(nuevoGrupo);
     }
     return groups;
@@ -53,7 +53,7 @@ export default function SearchProfileTable({ profiles }) {
   
         <TableBody>
           {rows.map((row) => {
-            const urlsProfile = groupedProfiles.find(profile => profile.nombre_perfil_busqueda === row.name);
+            const urlsProfile = groupedProfiles.find(profile => profile.profile_name === row.name);
             return (
               <TableRow
                 key={row.name}
@@ -86,7 +86,7 @@ export default function SearchProfileTable({ profiles }) {
 function generateRows(groupedProfiles) { //mover como función abstracta de otra clase (table)
   const newRows = groupedProfiles.map((groupedProfile, index) => {
     const number = index + 1;
-    const name = groupedProfile[0].nombre_perfil_busqueda;
+    const name = groupedProfile[0].profile_name;
     let length = groupedProfile.length;
 
     if (verifyLenght(groupedProfile)) {
@@ -102,8 +102,8 @@ function generateRows(groupedProfiles) { //mover como función abstracta de otra
 function verifyLenght (groupedProfile) {
   return groupedProfile.every(item => 
     item.id === null && 
-    item.perfil_busqueda_id === null && 
-    item.nombre === null && 
+    item.id_profile === null && 
+    item.name === null && 
     item.url === null && 
     item.visited === null
   );

@@ -26,7 +26,7 @@ export default function NewUrlForm({ onTextFieldChange }) {
         <TextField
             id="outlined-required"
             label="Nombre"
-            onChange={(e) => onTextFieldChange(e, 'nombre')}
+            onChange={(e) => onTextFieldChange(e, 'name')}
         />
         <TextField required 
             id="outlined-required" 
@@ -39,7 +39,7 @@ export default function NewUrlForm({ onTextFieldChange }) {
             value={frecuencia}
             onChange={(e) => {
                 handleFrecuenciaChange(e);
-                onTextFieldChange(e, 'frecuencia');
+                onTextFieldChange(e, 'frecuency');
               }}
             InputLabelProps={{
                 shrink: true,

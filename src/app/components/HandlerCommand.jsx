@@ -17,7 +17,7 @@ export class InsertUrlCommand extends HandlerCommand {
 
     async execute(){
         const urlData = new UrlData(this.data);
-        let query = `INSERT INTO urls_consulta (perfil_busqueda_id, nombre, url, frecuencia_consulta_hrs) VALUES (${urlData.perfil_busqueda_id}, '${urlData.nombre}', '${urlData.url}', ${urlData.frecuencia});`;
+        let query = `INSERT INTO urls (id_profile, name, url, frecuency) VALUES (${urlData.id_profile}, '${urlData.name}', '${urlData.url}', ${urlData.frecuency});`;
         
         try {
             const response = await fetch("/server", {
@@ -45,7 +45,7 @@ export class DeleteUrlCommand extends HandlerCommand {
         console.log("Data: ", this.data);
         const urlData = new UrlData(this.data);
         console.log("urlData: ", urlData);
-        let query = `DELETE FROM urls_consulta WHERE id = ${urlData.id};`;
+        let query = `DELETE FROM urls WHERE id = ${urlData.id};`;
         
         try {
             const response = await fetch("/server", {

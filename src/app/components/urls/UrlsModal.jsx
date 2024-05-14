@@ -6,7 +6,7 @@ import BuildIcon from '@mui/icons-material/Build';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import { DataGrid } from '@mui/x-data-grid';
-import { HandlerEdit, HandlerDetele, HandlerIndexar, HandlerInsert } from '../HandlerCommand';
+import { HandlerEdit, HandlerIndexar } from '../HandlerCommand';
 import NewUrlForm from './NewUrlForm';
 import { UrlData } from './Interface';
 import HandlerManager from './HandlerManager';
@@ -27,10 +27,10 @@ const style = {
 function ChildModal() {
   const [open, setOpen] = React.useState(false);
   const [formData, setFormData] = useState(new UrlData({
-    nombre: '',
+    name: '',
     url: '',
-    frecuencia: '',
-    perfil_busqueda_id: 1,
+    frecuency: '',
+    id_profile: 1,
   }));
 
   const handleOpen = () => {
@@ -80,7 +80,7 @@ function ChildModal() {
 
 export default function UrlModal({ urls }) {
   const [open, setOpen] = React.useState(false);
-  
+  console.log("URLS: ", urls);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -94,7 +94,7 @@ export default function UrlModal({ urls }) {
       field: 'nombre', 
       headerName: 'Nombre', 
       flex: 0.5,
-      valueGetter: (value, row) => `${row.nombre || ''}`
+      valueGetter: (value, row) => `${row.name || ''}`
     },
     { 
       field: 'url', 
@@ -114,7 +114,7 @@ export default function UrlModal({ urls }) {
       headerName: 'Frecuencia (hrs)',
       description: 'Esta columna indica cada cuántas horas se consulta la URL de manera automática.',
       flex: 0.5,
-      valueGetter: (value, row) => row.frecuencia_consulta_hrs ? row.frecuencia_consulta_hrs : 'No hay'
+      valueGetter: (value, row) => row.frecuency ? row.frecuency : 'No hay'
     },
     {
       field: 'acciones',

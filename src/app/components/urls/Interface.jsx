@@ -1,11 +1,11 @@
 class UrlData {
     constructor(data) {
         this.url = data.url;
-        this.nombre = data.nombre;
-        this.frecuencia = data.frecuencia || null;
-        this.perfil_busqueda_id = data.perfil_busqueda_id;
+        this.name = data.name;
+        this.frecuency = data.frecuency || null;
+        this.id_profile = data.id_profile;
         this.id = data.id || null;
-        this.visitado = data.visitado || null;
+        this.visited = data.visited || null;
     }
 }
 
