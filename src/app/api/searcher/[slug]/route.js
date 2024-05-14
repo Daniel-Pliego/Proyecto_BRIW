@@ -17,7 +17,6 @@ export async function GET (request, { params }) {
             query = searchParams.get('query')
         }
         
-
         if (!query) {
             return Response.json({ hello: 'no query' });
         } else {
@@ -54,7 +53,7 @@ async function addSearchingOperator (word, tokenPrevious, query, lang) {
     return query;
 }
 
-async function buildQuery (userInput) {
+export async function buildQuery (userInput) {
     var query = "";
     if (userInput === "*:*") { //*get every document
         query = "*:*";
