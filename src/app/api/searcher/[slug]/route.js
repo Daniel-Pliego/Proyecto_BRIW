@@ -34,7 +34,6 @@ async function addSearchingOperator (word, tokenPrevious, query, lang) {
     if (lang != 'notFound') {
         similarWordsResult = await returnSynonyms(word, lang)
     }
-
     if (similarWordsResult == null && !isAcceptedOperator(word)) {
         return query
     }
