@@ -1,6 +1,5 @@
 import { GET, buildQuery} from './route.js';
 
-
 class FormDataMock {
     constructor (data) {
         this.nextUrl= {searchParams:data};

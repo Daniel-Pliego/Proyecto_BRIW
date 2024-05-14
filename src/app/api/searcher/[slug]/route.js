@@ -1,7 +1,6 @@
 import { returnURLcore } from "../../../../../public/script/solrClient/solr.js";
 import { returnTokens, fixedEncodeURIComponent } from "../../../../../public/script/searcher/tokenizer.js"
 import { returnSynonyms } from "../../../../../public/script/searcher/expander.js"
-
 const solrUrl = returnURLcore();
 
 export async function GET (request, { params }) {
