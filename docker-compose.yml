@@ -2,7 +2,7 @@ version: '3'
 services:
   solr:
     image: solr
-    container_name: solrPrueba1
+    container_name: solrPrueba2
     ports:
       - "8983:8983"
     volumes:
