@@ -36,7 +36,7 @@ jobs:
         timeout-minutes: 5
 
       - name: Execute command inside Solr container
-        run: docker exec solrPrueba2 solr create_core -c v2 -d /opt/solr/server/solr/configsets/solr-config
+        run: docker exec solrPrueba2 solr create_core -c v5 -d /var/solr/data/configsets/solr-config
 
       - name: upload docker image
         run: docker pull jonatan08/myimage:tagname
