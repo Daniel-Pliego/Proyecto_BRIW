@@ -1,4 +1,4 @@
-import { InsertUrlCommand, DeleteUrlCommand } from '../HandlerCommand'; 
+import { InsertUrlCommand, DeleteUrlCommand, GetUrlsAndProfilesCommand } from './HandlerCommand'; 
 
 export default class HandlerManager {
     constructor() {
@@ -13,5 +13,11 @@ export default class HandlerManager {
     async deleteURL(data) {
         const deleteCommand = new DeleteUrlCommand(data); 
         let response = await deleteCommand.execute();
+    }
+
+    async getUrlsAndProfilesName(data) {
+        const getCommand = new GetUrlsAndProfilesCommand(data);
+        const response = await getCommand.execute();
+        return response;
     }
 }

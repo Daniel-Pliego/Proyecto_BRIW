@@ -6,10 +6,10 @@ import BuildIcon from '@mui/icons-material/Build';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import { DataGrid } from '@mui/x-data-grid';
-import { HandlerEdit, HandlerIndexar } from '../HandlerCommand';
+import { HandlerEdit, HandlerIndexar } from '../../commands/HandlerCommand';
 import NewUrlForm from './NewUrlForm';
 import { UrlData } from './Interface';
-import HandlerManager from './HandlerManager';
+import HandlerManager from '../../commands/HandlerManager';
 
 const style = {
   position: 'absolute',
@@ -80,7 +80,6 @@ function ChildModal() {
 
 export default function UrlModal({ urls }) {
   const [open, setOpen] = React.useState(false);
-  console.log("URLS: ", urls);
   const handleOpen = () => {
     setOpen(true);
   };

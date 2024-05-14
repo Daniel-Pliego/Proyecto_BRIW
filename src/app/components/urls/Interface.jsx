@@ -9,10 +9,19 @@ class UrlData {
     }
 }
 
+class UserData {
+    constructor(data) {
+        this.id_user = data.id_user;
+        this.username = data.username;
+        this.password = data.password;
+    }
+}
+
 class ProfileData {
     constructor(data) {
+        this.id_user = data.id_user;
         this.nombre_perfil_busqueda = data.nombre_perfil_busqueda;
     }
 }
 
-export { UrlData, ProfileData };
+export { UrlData, ProfileData, UserData };

@@ -2,32 +2,30 @@
 import React, { useCallback, useState, useEffect  } from "react";
 import SearchProfileTable  from "../components/SearchProfiles/SearchProfileTable";
 import NewProfileForm from '../components/SearchProfiles/NewSearchPForm';
+import HandlerManager from "../commands/HandlerManager";
+import { UserData } from "../components/urls/Interface";
 
 export default function SearchProfiles(){
     const [profiles, setProfiles] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    const firstQuery = "SELECT urls.*, profiles.name AS profile_name " +
-                        "FROM urls " +
-                        "RIGHT JOIN users_profiles AS profiles ON urls.id_profile = profiles.id " +
-                        "WHERE profiles.id_user = 1 " +
-                        "ORDER BY urls.id_profile;";
+    const [userData, setUserData] = useState(new UserData({
+        id_user: 1,
+        username: '',
+        password: ''
+    }));
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("/server", {
-                    method: "POST",
-                    body: firstQuery,
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setProfiles(data.result);
+                const manager = new HandlerManager();
+                const response = await manager.getUrlsAndProfilesName(userData);
+                if (response.status === 200) {
+                    const responseData = await response.result;
+                    setProfiles(responseData);
                     setLoading(false);
                 }
             } catch (error) {
-                alert("Error al obtener perfiles de búsqueda: " + error);
-                console.error("Error al obtener perfiles de búsqueda:", error);
+                console.error("Error al obtener o asignar los urls:", error);
             }
         };
         fetchData();

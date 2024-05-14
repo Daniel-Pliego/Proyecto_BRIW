@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { HandlerEdit, HandlerDetele } from '../HandlerCommand';
+import { HandlerEdit, HandlerDetele } from '../../commands/HandlerCommand';
 
 function groupProfiles(array) {
   return array.reduce((groups, elemento) => {

@@ -1,4 +1,4 @@
-import { UrlData, ProfileData } from './urls/Interface';
+import { UrlData, ProfileData, UserData } from '../components/urls/Interface';
 
 class HandlerCommand {
     constructor(data){
@@ -7,6 +7,35 @@ class HandlerCommand {
     }
 
     async execute (){}
+}
+
+export class GetUrlsAndProfilesCommand extends HandlerCommand {
+    constructor(data) {
+        super(data);
+    }
+
+    async execute(){
+        const userData = new UserData(this.data);
+        let query = `SELECT urls.*, profiles.name AS profile_name ` +
+                    `FROM urls ` +
+                    `RIGHT JOIN users_profiles AS profiles ON urls.id_profile = profiles.id ` +
+                    `WHERE profiles.id_user = ${userData.id_user} ` +
+                    `ORDER BY urls.id_profile;`;
+
+        const endpoint = `/server?query=${query}`;
+        
+        try {
+            const response = await fetch(endpoint, {
+                method: "GET",
+            });
+            if (response.ok) {
+                const dataResponse = await response.json();
+                return dataResponse;
+            }
+        } catch (error) {
+            console.error("Error al obtener URLs y nombres de perfiles del usuario:", error);
+        }
+    }
 }
 
 export class InsertUrlCommand extends HandlerCommand {
