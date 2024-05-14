@@ -9,6 +9,7 @@ const config = {
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { configFile: './babel.config.js' }],
   },
+  setupFilesAfterEnv: ['./jest.setup.js'],
 };
 
 module.exports = config;
