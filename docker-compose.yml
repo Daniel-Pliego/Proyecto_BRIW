@@ -2,19 +2,20 @@ version: '3'
 services:
   solr:
     image: solr
-    container_name: solrPrueba1
+    container_name: solrPrueba2
     ports:
       - "8983:8983"
     volumes:
       - data:/var/solr
       - ./solr-config-linux:/opt/solr/server/solr/configsets/solr-config
-      - ./solr-config-linux:/var/solr/data/configsets/solr-config
     command: ["solr", "-f"]
     networks:
       - mi-red-docker
+
 volumes:
   data:
 
 networks:
   mi-red-docker:
     external: true
+

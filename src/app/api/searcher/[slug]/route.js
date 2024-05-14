@@ -1,7 +1,6 @@
 import { returnURLcore } from "../../../../../public/script/solrClient/solr.js";
 import { returnTokens, fixedEncodeURIComponent } from "../../../../../public/script/searcher/tokenizer.js"
 import { returnSynonyms } from "../../../../../public/script/searcher/expander.js"
-
 const solrUrl = returnURLcore();
 
 export async function GET (request, { params }) {
@@ -17,7 +16,6 @@ export async function GET (request, { params }) {
             query = searchParams.get('query')
         }
         
-
         if (!query) {
             return Response.json({ hello: 'no query' });
         } else {
@@ -36,7 +34,6 @@ async function addSearchingOperator (word, tokenPrevious, query, lang) {
     if (lang != 'notFound') {
         similarWordsResult = await returnSynonyms(word, lang)
     }
-
     if (similarWordsResult == null && !isAcceptedOperator(word)) {
         return query
     }
@@ -54,7 +51,7 @@ async function addSearchingOperator (word, tokenPrevious, query, lang) {
     return query;
 }
 
-async function buildQuery (userInput) {
+export async function buildQuery (userInput) {
     var query = "";
     if (userInput === "*:*") { //*get every document
         query = "*:*";
