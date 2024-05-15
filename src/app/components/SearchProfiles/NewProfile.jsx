@@ -109,9 +109,10 @@ export default function NewProfile() {
             onTextFieldChange={handleTextFieldChange}
             setFormDataURL={setFormDataURL}
           />
-          <Button align="right" disabled={isSaveButtonDisabled} onClick={() => {
+          <Button align="right" disabled={isSaveButtonDisabled} onClick={async () => {
               const manager = new HandlerManager();
-              manager.insertProfileAndURL(formDataProfile, formDataURL); 
+              formDataURL.id_profile = await manager.insertProfile(formDataProfile); 
+              manager.insertURL(formDataURL);
               handleClose();
           }}>
               Guardar

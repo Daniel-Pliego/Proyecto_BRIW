@@ -20,15 +20,12 @@ export default class HandlerManager {
         return response;
     }
 
-    async insertProfileAndURL(dataProfile, dataURL) {
+    async insertProfile(dataProfile) {
         const insertProfileCommand = new InsertProfileCommand(dataProfile);
         let responseProfile = await insertProfileCommand.execute();
 
         const idProfile = responseProfile.result.insertId;
-        dataURL.id_profile = idProfile;
-
-        const insertUrlCommand = new InsertUrlCommand(dataURL);
-        let responseURL = await insertUrlCommand.execute();
+        return idProfile;
     }
 
     async deleteProfile(data){
