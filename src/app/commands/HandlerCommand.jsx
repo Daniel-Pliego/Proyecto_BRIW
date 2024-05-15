@@ -135,6 +135,23 @@ export class DeleteProfileCommand extends HandlerCommand {
     }
 }
 
+export class IndexURLCommand extends HandlerCommand {
+    constructor(data) {
+        super(data);
+    }
+
+    async execute(){
+        const urlData = new UrlData(this.data);
+        console.log("urlData a indexar: ", urlData);
+        try {
+            //Aquí haces la llamada para indexar, los campos que necesitas ya estám , los puedes consultar en la interface UrlData
+        } catch (error) {
+            console.error("Error al indexar URL:", error);
+        }
+    }
+
+}
+
 
 function HandlerEdit() {
     console.log("Editando...");

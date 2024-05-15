@@ -155,6 +155,8 @@ export default function UrlModal({ urls }) {
             style={{ marginRight: '5%' }}
             onClick={(event) => {
               event.stopPropagation(); 
+              const manager = new HandlerManager();
+              manager.indexURL(row.row);
               HandlerIndexar(); 
             }}
           >
