@@ -1,6 +1,6 @@
-import { returnURLcore } from "../../../../../public/script/solrClient/solr.js";
-import { returnTokens, fixedEncodeURIComponent } from "../../../../../public/script/searcher/tokenizer.js"
-import { returnSynonyms } from "../../../../../public/script/searcher/expander.js"
+import { returnURLcore } from "../../../../infra/gateway/solr/solr.js";
+import { returnTokens, fixedEncodeURIComponent } from "../../../../core/utils/searcher/tokenizer.js"
+import { returnSynonyms } from "../../../../core/utils/searcher/expander.js"
 const solrUrl = returnURLcore();
 
 export async function GET (request, { params }) {
@@ -39,7 +39,7 @@ async function addSearchingOperator (word, tokenPrevious, query, lang) {
     }
     console.log("Synonyms:> " + similarWordsResult + "\n");
 
-    if (typeof query === "string" && query.length === 0 && !isAcceptedOperator) { //* for next word if previous was stopword
+    if (typeof query === "string" && query.length === 0 && !isAcceptedOperator) {
         tokenPrevious = ""
     }
 
@@ -53,7 +53,7 @@ async function addSearchingOperator (word, tokenPrevious, query, lang) {
 
 export async function buildQuery (userInput) {
     var query = "";
-    if (userInput === "*:*") { //*get every document
+    if (userInput === "*:*") {
         query = "*:*";
     } else {
         let tokensDict = await returnTokens(userInput)

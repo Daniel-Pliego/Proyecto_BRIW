@@ -7,7 +7,7 @@ services:
       - "8983:8983"
     volumes:
       - data:/var/solr
-      - ./solr-config-linux:/opt/solr/server/solr/configsets/solr-config
+      - ./resources/solr-config-linux:/opt/solr/server/solr/configsets/solr-config
     command: ["solr", "-f"]
     networks:
       - mi-red-docker

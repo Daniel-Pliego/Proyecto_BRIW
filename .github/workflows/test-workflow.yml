@@ -47,6 +47,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Creating env file
+        run: cp .env.example .env
+
       - name: Run integration tests
         run: npm run test
 
