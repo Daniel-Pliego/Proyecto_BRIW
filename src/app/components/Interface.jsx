@@ -21,6 +21,7 @@ class ProfileData {
     constructor(data) {
         this.id_user = data.id_user;
         this.name = data.name;
+        this.id_profile = data.id_profile;
     }
 }
 

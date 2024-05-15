@@ -65,14 +65,10 @@ export class InsertUrlCommand extends HandlerCommand {
 export class DeleteUrlCommand extends HandlerCommand {
     constructor(data) {
         super(data);
-        console.log("Eliminando URL...", data || "sin datos");
     }
 
     async execute(){
-        console.log("Eliminando URL...");
-        console.log("Data: ", this.data);
         const urlData = new UrlData(this.data);
-        console.log("urlData: ", urlData);
         let query = `DELETE FROM urls WHERE id = ${urlData.id};`;
         
         try {
@@ -90,7 +86,7 @@ export class DeleteUrlCommand extends HandlerCommand {
     }
 }
 
-export class InsertProfileAndURLCommand extends HandlerCommand {
+export class InsertProfileCommand extends HandlerCommand {
     constructor(data) {
         super(data);
     }
@@ -116,21 +112,27 @@ export class InsertProfileAndURLCommand extends HandlerCommand {
 
 }
 
-//falta este comando
-export class deleteProfileCommand extends HandlerCommand {
+export class DeleteProfileCommand extends HandlerCommand {
     constructor(data) {
-        super();
-        this.data = data;
-        console.log("Eliminando profile...", data || "sin datos");
+        super(data);
     }
 
-    data(){
-        const urlData = new UrlData(data);
-        return urlData;
-
-        //falta implementación
+    async execute(){
+        const id_profile =this.data;
+        let query = `DELETE FROM users_profiles WHERE id = ${id_profile};`;
+        try {
+            const response = await fetch("/server", {
+                method: "DELETE",
+                body: query,
+            });
+            if (response.ok) {
+                const dataResponse = await response.json();
+                console.log("dataResponse: ", dataResponse);
+            }
+        } catch (error) {
+            console.error("Error al eliminar Perfil:", error);
+        }
     }
-
 }
 
 

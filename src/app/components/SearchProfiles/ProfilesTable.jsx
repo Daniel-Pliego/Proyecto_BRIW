@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { HandlerEdit, HandlerDetele } from '../../commands/HandlerCommand';
+import HandlerManager from '../../commands/HandlerManager';
 
 function groupProfiles(array) {
   return array.reduce((groups, elemento) => {
@@ -21,6 +21,7 @@ function groupProfiles(array) {
     } else {
       const nuevoGrupo = [elemento];
       nuevoGrupo.profile_name = `${elemento.profile_name}`;
+      nuevoGrupo.id_profile = elemento.id_perfil;
       groups.push(nuevoGrupo);
     }
     return groups;
@@ -34,8 +35,6 @@ export default function SearchProfileTable({ profiles }) {
   useEffect(() => { 
       const groupedProfiles = groupProfiles(profiles);
       setGroupedProfiles(groupedProfiles);
-      console.log("groupedProfiles: ", groupedProfiles);
-
       const newRows = generateRows(groupedProfiles, rows);
       setRows(newRows);
   }, [profiles]);
@@ -71,7 +70,8 @@ export default function SearchProfileTable({ profiles }) {
                   {( <UrlModal urls={urlsProfile} /> )}
                   <Button variant="outlined" startIcon={<DeleteIcon />} 
                     onClick={(event) => {
-                    HandlerDetele(); 
+                      const manager = new HandlerManager(); 
+                      manager.deleteProfile(urlsProfile.id_profile);
                   }}>
                     Borrar
                   </Button>

@@ -1,4 +1,4 @@
-import { InsertUrlCommand, DeleteUrlCommand, GetUrlsAndProfilesCommand, InsertProfileAndURLCommand } from './HandlerCommand'; 
+import { InsertUrlCommand, DeleteUrlCommand, GetUrlsAndProfilesCommand, InsertProfileCommand, DeleteProfileCommand } from './HandlerCommand'; 
 
 export default class HandlerManager {
     constructor() {
@@ -21,15 +21,18 @@ export default class HandlerManager {
     }
 
     async insertProfileAndURL(dataProfile, dataURL) {
-        console.log("dataProfile para hacer insert", dataProfile);
-        const insertProfileCommand = new InsertProfileAndURLCommand(dataProfile);
+        const insertProfileCommand = new InsertProfileCommand(dataProfile);
         let responseProfile = await insertProfileCommand.execute();
 
         const idProfile = responseProfile.result.insertId;
         dataURL.id_profile = idProfile;
 
-        console.log("dataURL para hacer insert", dataURL);
         const insertUrlCommand = new InsertUrlCommand(dataURL);
         let responseURL = await insertUrlCommand.execute();
+    }
+
+    async deleteProfile(data){
+        const deleteProfileCommand = new DeleteProfileCommand(data);
+        let response = await deleteProfileCommand.execute();
     }
 }
