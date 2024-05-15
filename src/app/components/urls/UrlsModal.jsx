@@ -8,7 +8,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { DataGrid } from '@mui/x-data-grid';
 import { HandlerEdit, HandlerIndexar } from '../../commands/HandlerCommand';
 import NewUrlForm from './NewUrlForm';
-import { UrlData } from './Interface';
+import { UrlData } from '../Interface';
 import HandlerManager from '../../commands/HandlerManager';
 
 const style = {
@@ -40,10 +40,10 @@ function ChildModal() {
     setOpen(false);
   };
 
-  const handleTextFieldChange = (event, fieldName) => {
+  const handleTextFieldChange = (event, fieldName, setFormData) => {
     const value = event.target.value;
     setFormData(prevData => {
-      const newData = new UrlData(prevData);
+      const newData = { ...prevData };
       newData[fieldName] = value;
       return newData;
     });
@@ -63,7 +63,10 @@ function ChildModal() {
           <p id="child-modal-description">
             Formulario para agregar un Url al perfil de búsqueda.
           </p>
-          <NewUrlForm onTextFieldChange={handleTextFieldChange}/>
+          <NewUrlForm
+          setFormData={setFormData}
+          onTextFieldChange={handleTextFieldChange}
+          />
           <Button onClick={() => {
               const manager = new HandlerManager();
               manager.insertURL(formData); 

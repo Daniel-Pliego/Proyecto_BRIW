@@ -1,11 +1,10 @@
-import { InsertUrlCommand, DeleteUrlCommand, GetUrlsAndProfilesCommand } from './HandlerCommand'; 
+import { InsertUrlCommand, DeleteUrlCommand, GetUrlsAndProfilesCommand, InsertProfileAndURLCommand } from './HandlerCommand'; 
 
 export default class HandlerManager {
     constructor() {
     }
 
     async insertURL(data) {
-        console.log("data para hacer insert", data);
         const insertCommand = new InsertUrlCommand(data);
         let response = await insertCommand.execute();
     }
@@ -19,5 +18,18 @@ export default class HandlerManager {
         const getCommand = new GetUrlsAndProfilesCommand(data);
         const response = await getCommand.execute();
         return response;
+    }
+
+    async insertProfileAndURL(dataProfile, dataURL) {
+        console.log("dataProfile para hacer insert", dataProfile);
+        const insertProfileCommand = new InsertProfileAndURLCommand(dataProfile);
+        let responseProfile = await insertProfileCommand.execute();
+
+        const idProfile = responseProfile.result.insertId;
+        dataURL.id_profile = idProfile;
+
+        console.log("dataURL para hacer insert", dataURL);
+        const insertUrlCommand = new InsertUrlCommand(dataURL);
+        let responseURL = await insertUrlCommand.execute();
     }
 }

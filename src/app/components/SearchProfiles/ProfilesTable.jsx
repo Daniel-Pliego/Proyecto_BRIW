@@ -15,7 +15,7 @@ import { HandlerEdit, HandlerDetele } from '../../commands/HandlerCommand';
 
 function groupProfiles(array) {
   return array.reduce((groups, elemento) => {
-    const existingGroup = groups.find(group => group[0].id_profile === elemento.id_profile);
+    const existingGroup = groups.find(group => group[0].id_profile === elemento.id_perfil);
     if (existingGroup) {
       existingGroup.push(elemento);
     } else {
@@ -34,6 +34,8 @@ export default function SearchProfileTable({ profiles }) {
   useEffect(() => { 
       const groupedProfiles = groupProfiles(profiles);
       setGroupedProfiles(groupedProfiles);
+      console.log("groupedProfiles: ", groupedProfiles);
+
       const newRows = generateRows(groupedProfiles, rows);
       setRows(newRows);
   }, [profiles]);

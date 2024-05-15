@@ -44,7 +44,7 @@ export async function GET(request) {
     console.log("Solicitaron un GET");
     const queryParams = new URLSearchParams(request.url.split('?')[1]);
     const query = queryParams.get('query');
-    console.log("Consulta recibida:", query);
+    // console.log("Consulta recibida:", query);
     let results = await db.query(query);
     return new Response(JSON.stringify({ status: 200, result: results }));
   } catch (error) {

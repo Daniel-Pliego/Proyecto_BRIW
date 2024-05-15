@@ -1,9 +1,8 @@
-import { UrlData, ProfileData, UserData } from '../components/urls/Interface';
+import { UrlData, ProfileData, UserData } from '../components/Interface';
 
 class HandlerCommand {
     constructor(data){
         this.data = data;
-        console.log("HandlerCommand creado");
     }
 
     async execute (){}
@@ -16,11 +15,11 @@ export class GetUrlsAndProfilesCommand extends HandlerCommand {
 
     async execute(){
         const userData = new UserData(this.data);
-        let query = `SELECT urls.*, profiles.name AS profile_name ` +
+        let query = `SELECT urls.*, Uprofiles.name AS profile_name , Uprofiles.id AS id_perfil, Uprofiles.created ` +
                     `FROM urls ` +
-                    `RIGHT JOIN users_profiles AS profiles ON urls.id_profile = profiles.id ` +
-                    `WHERE profiles.id_user = ${userData.id_user} ` +
-                    `ORDER BY urls.id_profile;`;
+                    `RIGHT JOIN users_profiles AS Uprofiles ON urls.id_profile = Uprofiles.id ` +
+                    `WHERE Uprofiles.id_user = ${userData.id_user} ` +
+                    `ORDER BY Uprofiles.created;`;
 
         const endpoint = `/server?query=${query}`;
         
@@ -91,20 +90,33 @@ export class DeleteUrlCommand extends HandlerCommand {
     }
 }
 
-export class insertProfileCommand extends HandlerCommand {
+export class InsertProfileAndURLCommand extends HandlerCommand {
     constructor(data) {
-        super();
-        this.data = data;
-        console.log("Insertando profile...", data || "sin datos");
+        super(data);
     }
 
-    data(){
-        const urlData = new UrlData(data);
-        return urlData;
+    async execute(){
+        const profileData = new ProfileData(this.data);
+        let query = `INSERT INTO users_profiles (id_user, name) VALUES (${profileData.id_user}, '${profileData.name}');`;
+        
+        try {
+            const response = await fetch("/server", {
+                method: "POST",
+                body: query,
+            });
+            if (response.ok) {
+                const dataResponse = await response.json();
+                console.log("dataResponse: ", dataResponse);
+                return dataResponse;
+            }
+        } catch (error) {
+            console.error("Error al insertar profile:", error);
+        }
     }
 
 }
 
+//falta este comando
 export class deleteProfileCommand extends HandlerCommand {
     constructor(data) {
         super();
@@ -120,9 +132,6 @@ export class deleteProfileCommand extends HandlerCommand {
     }
 
 }
-
-
-
 
 
 function HandlerEdit() {

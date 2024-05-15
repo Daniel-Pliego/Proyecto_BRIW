@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
-export default function NewUrlForm({ onTextFieldChange }) {
+export default function NewUrlForm({ setFormData, onTextFieldChange }) {
   const [frecuencia, setFrecuencia] = useState('');
 
   const handleFrecuenciaChange = (event) => {
@@ -26,12 +26,12 @@ export default function NewUrlForm({ onTextFieldChange }) {
         <TextField
             id="outlined-required"
             label="Nombre"
-            onChange={(e) => onTextFieldChange(e, 'name')}
+            onChange={(e) => onTextFieldChange(e, 'name', setFormData)}
         />
         <TextField required 
             id="outlined-required" 
             label="URL" 
-            onChange={(e) => onTextFieldChange(e, 'url')} />
+            onChange={(e) => onTextFieldChange(e, 'url', setFormData)} />
         <TextField
             id="outlined-number"
             label="Frecuencia (Hrs)"
@@ -39,7 +39,7 @@ export default function NewUrlForm({ onTextFieldChange }) {
             value={frecuencia}
             onChange={(e) => {
                 handleFrecuenciaChange(e);
-                onTextFieldChange(e, 'frecuency');
+                onTextFieldChange(e, 'frecuency', setFormData);
               }}
             InputLabelProps={{
                 shrink: true,

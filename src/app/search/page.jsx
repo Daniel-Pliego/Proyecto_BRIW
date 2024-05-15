@@ -1,9 +1,10 @@
 "use client";
 import React, { useCallback, useState, useEffect  } from "react";
-import SearchProfileTable  from "../components/SearchProfiles/SearchProfileTable";
-import NewProfileForm from '../components/SearchProfiles/NewSearchPForm';
+import SearchProfileTable  from "../components/SearchProfiles/ProfilesTable";
+import NewProfile from '../components/SearchProfiles/NewProfile';
 import HandlerManager from "../commands/HandlerManager";
-import { UserData } from "../components/urls/Interface";
+import { UserData } from "../components/Interface";
+
 
 export default function SearchProfiles(){
     const [profiles, setProfiles] = useState([]);
@@ -32,7 +33,7 @@ export default function SearchProfiles(){
     }, []);
 
     if (loading) {
-        return <div>Cargando perfiles...</div>; 
+        return <div>Cargando perfiles...</div>
         // Se puede poner otro elemento mas bonito
     }
 
@@ -40,8 +41,7 @@ export default function SearchProfiles(){
         <div className="container p-8 mx-auto mt-8 border border-gray-300 rounded-lg">
             <h1 className="mb-4 text-2xl font-bold">PERFILES DE BUSQUEDA</h1>
             <SearchProfileTable profiles={ profiles } />
-            {/* <Button variant="contained">Agrear Perfil de busqueda</Button>  */}
-            <NewProfileForm />
+            <NewProfile />
         </div>
     );
 };

@@ -20,7 +20,7 @@ class UserData {
 class ProfileData {
     constructor(data) {
         this.id_user = data.id_user;
-        this.nombre_perfil_busqueda = data.nombre_perfil_busqueda;
+        this.name = data.name;
     }
 }
 
