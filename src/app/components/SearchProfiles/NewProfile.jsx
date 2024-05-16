@@ -4,10 +4,10 @@ import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import { ProfileData, UrlData } from '../Interface';
+import { ProfileData, UrlData } from '../../core/entities/Interface';
 import UrlForm from '../urls/UrlForm';
-import HandlerManager from '../../commands/HandlerManager';
-import handleTextFieldChange from '../Services/handleTextFieldChange';
+import HandlerManager from '../../infra/store/commands/HandlerManager';
+import {handleTextFieldChange, resetUrlFormData} from '../Services/servicesTextField';
 
 const style = {
     position: 'absolute',
@@ -102,9 +102,11 @@ export default function NewProfile() {
           />
           <Button align="right" disabled={isSaveButtonDisabled} onClick={async () => {
               const manager = new HandlerManager();
-              formDataURL.id_profile = await manager.insertProfile(formDataProfile); 
+              formDataURL.id_profile = await manager.insertProfile(formDataProfile);
+               setFormDataProfile({name: '', id_user: 1});
               manager.insertURL(formDataURL);
               handleClose();
+              resetUrlFormData(setFormDataURL, null);
           }}>
               Guardar
           </Button>

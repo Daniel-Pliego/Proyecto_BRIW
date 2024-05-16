@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
-import HandlerManager from '../../commands/HandlerManager';
+import HandlerManager from '../../infra/store/commands/HandlerManager';
 
 function groupProfiles(array) {
   return array.reduce((groups, elemento) => {
@@ -55,6 +55,7 @@ export default function SearchProfileTable({ profiles }) {
         <TableBody>
           {rows.map((row) => {
             const urlsProfile = groupedProfiles.find(profile => profile.profile_name === row.name);
+            // console.log(urlsProfile.id_profile);
             return (
               <TableRow
                 key={row.name}

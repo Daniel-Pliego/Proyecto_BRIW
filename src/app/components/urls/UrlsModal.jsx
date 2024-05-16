@@ -7,9 +7,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import { DataGrid } from '@mui/x-data-grid';
 import UrlForm from './UrlForm';
-import { UrlData } from '../Interface';
-import HandlerManager from '../../commands/HandlerManager';
-import handleTextFieldChange from '../Services/handleTextFieldChange';
+import { UrlData } from '../../core/entities/Interface';
+import HandlerManager from '../../infra/store/commands/HandlerManager';
+import {handleTextFieldChange, resetUrlFormData} from '../Services/servicesTextField';
 
 const style = {
   position: 'absolute',
@@ -24,14 +24,16 @@ const style = {
   pb: 3,
 };
 
-function NewURLButton() {
+function NewURLButton({ id_profile }) {
   const [open, setOpen] = React.useState(false);
   const [formData, setFormData] = useState(new UrlData({
     name: '',
     url: '',
     frecuency: '',
-    id_profile: 1,
+    id_profile: id_profile,
   }));
+
+
 
   const handleOpen = () => {
     setOpen(true);
@@ -39,6 +41,15 @@ function NewURLButton() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  // const resetFormData = () => {
+  //   setFormData(new UrlData({
+  //     name: '',
+  //     url: '',
+  //     frecuency: '',
+  //     id_profile: id_profile,
+  //   }));
+  // };
 
   return (
     <React.Fragment>
@@ -62,6 +73,7 @@ function NewURLButton() {
               const manager = new HandlerManager();
               manager.insertURL(formData); 
               handleClose();
+              resetUrlFormData(setFormData, id_profile);
           }}
           disabled={!formData.name || !formData.url}
           >
@@ -181,7 +193,7 @@ const filteredRows = isUrlNull ? [] : urls;
         <Box sx={{ ...style, width: '70%'}}>
           <h2 id="parent-modal-title">Perfil de Busqueda</h2>
           <p id="parent-modal-description">
-            Aquí se ve el formulario para agregar, eliminar o editar una URL.
+            Aquí se ve el formulario para agregar, indexar o eliminar una URL.
           </p>
 
           <div style={{ height: 600, width: '100%' }}>
@@ -202,7 +214,7 @@ const filteredRows = isUrlNull ? [] : urls;
               }}
             />
           </div>
-          <NewURLButton />
+          <NewURLButton id_profile={urls.id_profile} />
           <Button
             onClick={() => {
               console.log(selectedRows)

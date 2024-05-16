@@ -1,22 +1,9 @@
+"use server"
 import { Message } from '@mui/icons-material';
-import mysql from 'serverless-mysql';
-require('dotenv').config();
-
-const db =mysql ({
-  config: {
-    host:     process.env.HOST,
-    database: process.env.DATABASE,
-    user:     process.env.NOMBRE,
-  }
-});
-
-// console.log("HOST: ", process.env.HOST);
-// console.log("DATABASE: ", process.env.DATABASE);
-// console.log("USERNAME: ", process.env.NOMBRE);
-// console.log("--------------------------------------");
+import { db } from '../infra/databaseConnections/dbConnection.js';
 
 export async function POST(request) {
-  try {
+  try { 
     console.log("Solicitaron un POST");
     const requestBody = await request.text();
     // console.log("Request body:", requestBody);

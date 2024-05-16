@@ -1,4 +1,5 @@
-import { UrlData, ProfileData, UserData } from '../components/Interface';
+import { UrlData, ProfileData, UserData } from '../../../core/entities/Interface';
+import { POST } from '../../../server/route.js';
 
 class HandlerCommand {
     constructor(data){
@@ -7,6 +8,10 @@ class HandlerCommand {
 
     async execute (){}
 }
+
+function toPlainObject(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  }
 
 export class GetUrlsAndProfilesCommand extends HandlerCommand {
     constructor(data) {
@@ -46,7 +51,7 @@ export class InsertUrlCommand extends HandlerCommand {
     async execute(){
         const urlData = new UrlData(this.data);
         let query = `INSERT INTO urls (id_profile, name, url, frecuency) VALUES (${urlData.id_profile}, '${urlData.name}', '${urlData.url}', ${urlData.frecuency});`;
-        
+
         try {
             const response = await fetch("/server", {
                 method: "POST",
@@ -144,7 +149,7 @@ export class IndexURLCommand extends HandlerCommand {
         const urlData = new UrlData(this.data);
         console.log("urlData a indexar: ", urlData);
         try {
-            //Aquí haces la llamada para indexar, los campos que necesitas ya estám , los puedes consultar en la interface UrlData
+            //Aquí haces la llamada para indexar, los campos que necesitas ya están , los puedes consultar en la interface UrlData
         } catch (error) {
             console.error("Error al indexar URL:", error);
         }
