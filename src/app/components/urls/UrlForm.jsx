@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
-export default function NewUrlForm({ setFormData, onTextFieldChange }) {
+export default function UrlForm({ setFormData, onTextFieldChange }) {
   const [frecuencia, setFrecuencia] = useState('');
 
   const handleFrecuenciaChange = (event) => {

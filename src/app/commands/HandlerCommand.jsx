@@ -151,18 +151,3 @@ export class IndexURLCommand extends HandlerCommand {
     }
 
 }
-
-
-function HandlerEdit() {
-    console.log("Editando...");
-}
-
-function HandlerDetele() {
-    console.log("Eliminando...");
-}
-
-function HandlerIndexar() {
-    console.log("Indexando...");
-}
-
-export { HandlerEdit, HandlerDetele, HandlerIndexar};

@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { ProfileData, UrlData } from '../Interface';
-import NewUrlForm from '../urls/NewUrlForm';
+import UrlForm from '../urls/UrlForm';
 import HandlerManager from '../../commands/HandlerManager';
 import handleTextFieldChange from '../Services/handleTextFieldChange';
 
@@ -46,7 +46,7 @@ function NewProfileForm({ setFormData, onTextFieldChange, setFormDataURL}) {
       <h2 id="child-modal-title">URL</h2>
       <p id="child-modal-description">Formulario para agregar un URL al perfil de búsqueda.</p>
       <Divider />
-      <NewUrlForm 
+      <UrlForm 
       setFormData={setFormDataURL}
       onTextFieldChange={onTextFieldChange} 
       />

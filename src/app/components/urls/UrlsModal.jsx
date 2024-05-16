@@ -6,8 +6,7 @@ import BuildIcon from '@mui/icons-material/Build';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import { DataGrid } from '@mui/x-data-grid';
-import { HandlerEdit } from '../../commands/HandlerCommand';
-import NewUrlForm from './NewUrlForm';
+import UrlForm from './UrlForm';
 import { UrlData } from '../Interface';
 import HandlerManager from '../../commands/HandlerManager';
 import handleTextFieldChange from '../Services/handleTextFieldChange';
@@ -55,7 +54,7 @@ function NewURLButton() {
           <p id="child-modal-description">
             Formulario para agregar un Url al perfil de búsqueda.
           </p>
-          <NewUrlForm
+          <UrlForm
           setFormData={setFormData}
           onTextFieldChange={handleTextFieldChange}
           />
@@ -63,7 +62,9 @@ function NewURLButton() {
               const manager = new HandlerManager();
               manager.insertURL(formData); 
               handleClose();
-          }}>
+          }}
+          disabled={!formData.name || !formData.url}
+          >
               Guardar
           </Button>
 
@@ -132,17 +133,18 @@ export default function UrlModal({ urls }) {
           >
             Borrar
           </Button>
-          <Button
+          {/* <Button
             variant="outlined"
             startIcon={<BuildIcon />}
             style={{ marginRight: '5%' }}
             onClick={(event) => {
-              event.stopPropagation(); 
-              HandlerEdit(); 
-            }}
+              event.stopPropagation();
+              // const manager = new HandlerManager();
+              // manager.editURL(row.row);
+          }}
           >
             Editar
-          </Button>
+          </Button> */}
           <Button
             variant="outlined"
             startIcon={<SendIcon />}
