@@ -6,10 +6,11 @@ import BuildIcon from '@mui/icons-material/Build';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import { DataGrid } from '@mui/x-data-grid';
-import { HandlerEdit, HandlerIndexar } from '../../commands/HandlerCommand';
+import { HandlerEdit } from '../../commands/HandlerCommand';
 import NewUrlForm from './NewUrlForm';
 import { UrlData } from '../Interface';
 import HandlerManager from '../../commands/HandlerManager';
+import handleTextFieldChange from '../Services/handleTextFieldChange';
 
 const style = {
   position: 'absolute',
@@ -24,7 +25,7 @@ const style = {
   pb: 3,
 };
 
-function ChildModal() {
+function NewURLButton() {
   const [open, setOpen] = React.useState(false);
   const [formData, setFormData] = useState(new UrlData({
     name: '',
@@ -38,15 +39,6 @@ function ChildModal() {
   };
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleTextFieldChange = (event, fieldName, setFormData) => {
-    const value = event.target.value;
-    setFormData(prevData => {
-      const newData = { ...prevData };
-      newData[fieldName] = value;
-      return newData;
-    });
   };
 
   return (
@@ -83,6 +75,8 @@ function ChildModal() {
 
 export default function UrlModal({ urls }) {
   const [open, setOpen] = React.useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -157,7 +151,6 @@ export default function UrlModal({ urls }) {
               event.stopPropagation(); 
               const manager = new HandlerManager();
               manager.indexURL(row.row);
-              HandlerIndexar(); 
             }}
           >
             Indexar
@@ -171,7 +164,6 @@ export default function UrlModal({ urls }) {
 const firstRow = urls[0];
 const isUrlNull = firstRow && firstRow.url === null;
 const filteredRows = isUrlNull ? [] : urls;
-
 
   return (
     <div>
@@ -201,9 +193,24 @@ const filteredRows = isUrlNull ? [] : urls;
               }}
               pageSizeOptions={[5, 10]}
               checkboxSelection
+              onRowSelectionModelChange={(ids) => {
+                const selectedIDs = new Set(ids);
+                const selectedRowData = filteredRows.filter((row) => selectedIDs.has(row.id));
+                setSelectedRows(selectedRowData);
+              }}
             />
           </div>
-          <ChildModal />
+          <NewURLButton />
+          <Button
+            onClick={() => {
+              console.log(selectedRows)
+              const manager = new HandlerManager();
+              selectedRows.forEach(row => manager.indexURL(row));
+            }}
+            disabled={selectedRows.length === 0}
+          >
+            Indexar URLS seleccionados
+          </Button>
         </Box>
       </Modal>
     </div>

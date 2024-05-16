@@ -7,6 +7,7 @@ import Divider from '@mui/material/Divider';
 import { ProfileData, UrlData } from '../Interface';
 import NewUrlForm from '../urls/NewUrlForm';
 import HandlerManager from '../../commands/HandlerManager';
+import handleTextFieldChange from '../Services/handleTextFieldChange';
 
 const style = {
     position: 'absolute',
@@ -53,7 +54,6 @@ function NewProfileForm({ setFormData, onTextFieldChange, setFormDataURL}) {
   );
 }
 
-
 export default function NewProfile() {
   const [open, setOpen] = React.useState(false);
   
@@ -73,15 +73,6 @@ export default function NewProfile() {
   };
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleTextFieldChange = (event, fieldName, setFormData) => {
-    const value = event.target.value;
-    setFormData(prevData => {
-      const newData = { ...prevData };
-      newData[fieldName] = value;
-      return newData;
-    });
   };
 
   const isSaveButtonDisabled = !(
