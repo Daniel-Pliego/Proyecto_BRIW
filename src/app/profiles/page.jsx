@@ -15,16 +15,34 @@ export default function SearchProfiles(){
         password: ''
     }));
 
+    async function indexURLSFromProcedure(manager){
+        const procedureResponse = await manager.callStoredProcedure( userData.id_user);
+        if (procedureResponse.status === 200) {
+            const rowsAffected = procedureResponse.result[0];
+            rowsAffected.forEach(row => manager.indexURL(row));
+        }else{
+            console.error("Error al ejecutar el procedimiento almacenado:", procedureResponse);
+            throw new Error(procedureResponse);
+        }
+    }
+    async function getURLS(manager){
+        const response = await manager.getUrlsAndProfilesName(userData);
+        if (response.status === 200) {
+            const responseData = await response.result;
+            setProfiles(responseData);
+            setLoading(false);
+        }else{
+            console.error("Error al obtener los urls y nombres de perfiles:", response);
+            throw new Error(response);
+        }
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const manager = new HandlerManager();
-                const response = await manager.getUrlsAndProfilesName(userData);
-                if (response.status === 200) {
-                    const responseData = await response.result;
-                    setProfiles(responseData);
-                    setLoading(false);
-                }
+                indexURLSFromProcedure(manager);
+                getURLS(manager);
             } catch (error) {
                 console.error("Error al obtener o asignar los urls:", error);
             }

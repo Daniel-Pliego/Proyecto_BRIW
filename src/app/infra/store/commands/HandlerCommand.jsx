@@ -38,6 +38,7 @@ export class GetUrlsAndProfilesCommand extends HandlerCommand {
             }
         } catch (error) {
             console.error("Error al obtener URLs y nombres de perfiles del usuario:", error);
+            throw new Error(error);
         }
     }
 }
@@ -63,6 +64,7 @@ export class InsertUrlCommand extends HandlerCommand {
             }
         } catch (error) {
             console.error("Error al insertar URL:", error);
+            throw new Error(error);
         }
     }
 }
@@ -87,6 +89,7 @@ export class DeleteUrlCommand extends HandlerCommand {
             }
         } catch (error) {
             console.error("Error al eliminar URL:", error);
+            throw new Error(error);
         }
     }
 }
@@ -112,6 +115,7 @@ export class InsertProfileCommand extends HandlerCommand {
             }
         } catch (error) {
             console.error("Error al insertar profile:", error);
+            throw new Error(error);
         }
     }
 
@@ -136,6 +140,7 @@ export class DeleteProfileCommand extends HandlerCommand {
             }
         } catch (error) {
             console.error("Error al eliminar Perfil:", error);
+            throw new Error(error);
         }
     }
 }
@@ -152,7 +157,35 @@ export class IndexURLCommand extends HandlerCommand {
             //Aquí haces la llamada para indexar, los campos que necesitas ya están , los puedes consultar en la interface UrlData
         } catch (error) {
             console.error("Error al indexar URL:", error);
+            throw new Error(error);
         }
     }
 
+}
+
+export class CallStoredProcedureCommand extends HandlerCommand {
+    constructor(data) {
+        super(data);
+    }
+
+    async execute(){
+        const id_user = this.data;
+        console.log("id_user: ", id_user);
+        const query = `CALL update_visited_status2(${id_user});`;
+
+        try {
+            const response = await fetch("/server", {
+                method: "POST",
+                body: query,
+            });
+            if (response.ok) {
+                const dataResponse = await response.json();
+                console.log("dataResponse del procedure2: ", dataResponse);
+                return dataResponse;
+            }
+        } catch (error) {
+            console.error("Error al llamar procedimiento almacenado:", error);
+            throw new Error(error);
+        }
+    }
 }

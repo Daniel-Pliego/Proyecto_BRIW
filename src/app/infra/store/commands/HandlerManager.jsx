@@ -1,7 +1,13 @@
-import { InsertUrlCommand, DeleteUrlCommand, GetUrlsAndProfilesCommand, InsertProfileCommand, DeleteProfileCommand, IndexURLCommand } from './HandlerCommand'; 
+import { InsertUrlCommand, DeleteUrlCommand, GetUrlsAndProfilesCommand, InsertProfileCommand, DeleteProfileCommand, IndexURLCommand, CallStoredProcedureCommand } from './HandlerCommand'; 
 
 export default class HandlerManager {
     constructor() {
+    }
+
+    async callStoredProcedure(data) {
+        const callCommand = new CallStoredProcedureCommand(data);
+        const response = await callCommand.execute();
+        return response;
     }
 
     async insertURL(data) {
