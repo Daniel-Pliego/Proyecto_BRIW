@@ -189,3 +189,31 @@ export class CallStoredProcedureCommand extends HandlerCommand {
         }
     }
 }
+
+export class updateIndexURLCommand extends HandlerCommand {
+    constructor(data) {
+        super(data);
+    }
+
+    async execute(){
+        const urlData = new UrlData(this.data);
+        console.log("urlData a actualizar: ", urlData);
+        const query = `UPDATE urls SET name = '${urlData.name}', url = '${urlData.url}', visited = 1, frecuency = ${urlData.frecuency} WHERE id = ${urlData.id};`;
+
+        try {
+            const response = await fetch("/server", {
+                method: "PUT",
+                body: query,
+            });
+            if (response.ok) {
+                const dataResponse = await response.json();
+                console.log("dataResponse: ", dataResponse);
+                return dataResponse;
+            }
+            
+        } catch (error) {
+            console.error("Error al actualizar URL:", error);
+            throw new Error(error);
+        }
+    }
+}

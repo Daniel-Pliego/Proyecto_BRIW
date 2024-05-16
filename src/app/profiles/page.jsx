@@ -19,7 +19,10 @@ export default function SearchProfiles(){
         const procedureResponse = await manager.callStoredProcedure( userData.id_user);
         if (procedureResponse.status === 200) {
             const rowsAffected = procedureResponse.result[0];
-            rowsAffected.forEach(row => manager.indexURL(row));
+            rowsAffected.forEach(row => {
+                manager.indexURL(row);
+                manager.updateURL(row);
+            });
         }else{
             console.error("Error al ejecutar el procedimiento almacenado:", procedureResponse);
             throw new Error(procedureResponse);
@@ -31,6 +34,7 @@ export default function SearchProfiles(){
             const responseData = await response.result;
             setProfiles(responseData);
             setLoading(false);
+            return responseData;
         }else{
             console.error("Error al obtener los urls y nombres de perfiles:", response);
             throw new Error(response);

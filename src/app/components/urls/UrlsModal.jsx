@@ -165,6 +165,7 @@ export default function UrlModal({ urls }) {
               event.stopPropagation(); 
               const manager = new HandlerManager();
               manager.indexURL(row.row);
+              manager.updateIndexURL(row.row);
             }}
           >
             Indexar
@@ -219,7 +220,10 @@ const filteredRows = isUrlNull ? [] : urls;
             onClick={() => {
               console.log(selectedRows)
               const manager = new HandlerManager();
-              selectedRows.forEach(row => manager.indexURL(row));
+              selectedRows.forEach(row => 
+                manager.indexURL(row),
+                manager.updateIndexURL(row)
+              );
             }}
             disabled={selectedRows.length === 0}
           >
