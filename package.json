@@ -11,6 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@prisma/client": "^5.14.0",
     "axios": "^1.6.2",
     "datamuse": "^1.0.5",
     "fs": "^0.0.1-security",
@@ -19,11 +20,13 @@
     "languagedetect": "^2.0.0",
     "material-symbols": "^0.14.1",
     "next": "14.0.2",
+    "next-auth": "^4.24.7",
     "openai": "^4.20.1",
     "path": "^0.12.7",
     "react": "^18",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
+    "react-hook-form": "^7.51.4",
     "serverless-mysql": "^1.5.5",
     "solr-client": "^0.2.1",
     "stopword": "^2.0.8",
@@ -43,6 +46,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "node-mocks-http": "^1.14.1",
     "postcss": "^8",
+    "prisma": "^5.14.0",
     "tailwindcss": "^3.3.0"
   }
 }
