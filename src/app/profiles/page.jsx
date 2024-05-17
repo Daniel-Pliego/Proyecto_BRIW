@@ -21,7 +21,7 @@ export default function SearchProfiles(){
             const rowsAffected = procedureResponse.result[0];
             rowsAffected.forEach(row => {
                 manager.indexURL(row);
-                manager.updateURL(row);
+                manager.updateIndexURL(row);
             });
         }else{
             console.error("Error al ejecutar el procedimiento almacenado:", procedureResponse);

@@ -45,7 +45,7 @@ export async function PUT(request) {
     const requestBody = await request.text();
     // console.log("Request body:", requestBody);
     let results = await db.query(requestBody);
-    return new Response(JSON.stringify({ status: 200, result: results }));
+    return new Response(JSON.stringify({ status: 200, Message: 'URL actualizado correctamente', result: results }));
   } catch (error) {
     throw error;
   }
