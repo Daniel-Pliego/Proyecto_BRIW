@@ -161,11 +161,15 @@ export default function UrlModal({ urls }) {
             variant="outlined"
             startIcon={<SendIcon />}
             style={{ marginRight: '5%' }}
-            onClick={(event) => {
+            onClick={async (event) => {
               event.stopPropagation(); 
               const manager = new HandlerManager();
               manager.indexURL(row.row);
-              manager.updateIndexURL(row.row);
+              let response = await manager.updateIndexURL(row.row);
+              if (response.status === 200) {
+                alert("¡La URL se ha indexado correctamente!");
+                window.location.reload(); 
+              }
             }}
           >
             Indexar

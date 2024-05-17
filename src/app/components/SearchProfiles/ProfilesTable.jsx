@@ -55,7 +55,6 @@ export default function SearchProfileTable({ profiles }) {
         <TableBody>
           {rows.map((row) => {
             const urlsProfile = groupedProfiles.find(profile => profile.profile_name === row.name);
-            // console.log(urlsProfile.id_profile);
             return (
               <TableRow
                 key={row.name}

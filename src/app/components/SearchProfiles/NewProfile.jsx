@@ -103,7 +103,7 @@ export default function NewProfile() {
           <Button align="right" disabled={isSaveButtonDisabled} onClick={async () => {
               const manager = new HandlerManager();
               formDataURL.id_profile = await manager.insertProfile(formDataProfile);
-               setFormDataProfile({name: '', id_user: 1});
+              setFormDataProfile({name: '', id_user: 1});
               manager.insertURL(formDataURL);
               handleClose();
               resetUrlFormData(setFormDataURL, null);

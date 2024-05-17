@@ -29,7 +29,8 @@ export async function GET(request) {
   try {
     console.log("Solicitaron un GET");
     const queryParams = new URLSearchParams(request.url.split('?')[1]);
-    const query = queryParams.get('query');
+    const encodedQuery = queryParams.get('query');
+    const query = decodeURIComponent(encodedQuery);
     // console.log("Consulta recibida:", query);
     let results = await db.query(query);
     return new Response(JSON.stringify({ status: 200, result: results }));
@@ -37,6 +38,7 @@ export async function GET(request) {
     throw error;
   }
 }
+
 
 export async function PUT(request) {
   try {

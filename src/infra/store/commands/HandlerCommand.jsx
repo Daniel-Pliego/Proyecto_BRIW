@@ -1,5 +1,5 @@
 import { UrlData, ProfileData, UserData } from '../../../core/entities/Interface';
-import { POST } from '../../../app/api/indexer/route.js';
+
 
 class HandlerCommand {
     constructor(data){
@@ -8,10 +8,6 @@ class HandlerCommand {
 
     async execute (){}
 }
-
-function toPlainObject(obj) {
-    return JSON.parse(JSON.stringify(obj));
-  }
 
 export class GetUrlsAndProfilesCommand extends HandlerCommand {
     constructor(data) {
@@ -114,7 +110,7 @@ export class InsertProfileCommand extends HandlerCommand {
                 return dataResponse;
             }
         } catch (error) {
-            console.error("Error al insertar profile:", error);
+            console.error("Error al insertar profile.......................................................: ", error);
             throw new Error(error);
         }
     }

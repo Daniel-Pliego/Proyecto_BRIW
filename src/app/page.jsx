@@ -32,12 +32,13 @@ export default function Home () {
 
   const handleInputChange = (event) => {
     const query = event.target.value;
-    setSearchQuery(query);
+    console.log("query", query)
+    setSearchQuery(query); 
   };
 
-  const handleSubmit = async (query) => {
+  const handleSubmit = async (query) => { 
     setIsLoading({ searchBar: true, correction: true });
-    getSearch(query || searchQuery);
+    getSearch(searchQuery);
     setIsLoading({ searchBar: false, correction: true });
     let correction = await getOpenAICorrection(query || searchQuery);
     setOpenAICorrection(correction);
