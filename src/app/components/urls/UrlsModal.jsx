@@ -7,8 +7,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import { DataGrid } from '@mui/x-data-grid';
 import UrlForm from './UrlForm';
-import { UrlData } from '../../core/entities/Interface';
-import HandlerManager from '../../infra/store/commands/HandlerManager';
+import { UrlData } from '../../../core/entities/Interface';
+import HandlerManager from '../../../infra/store/commands/HandlerManager';
 import {handleTextFieldChange, resetUrlFormData} from '../Services/servicesTextField';
 
 const style = {

@@ -1,5 +1,5 @@
 import { UrlData, ProfileData, UserData } from '../../../core/entities/Interface';
-import { POST } from '../../../server/route.js';
+import { POST } from '../../../app/api/indexer/route.js';
 
 class HandlerCommand {
     constructor(data){
@@ -26,7 +26,7 @@ export class GetUrlsAndProfilesCommand extends HandlerCommand {
                     `WHERE Uprofiles.id_user = ${userData.id_user} ` +
                     `ORDER BY Uprofiles.created;`;
 
-        const endpoint = `/server?query=${query}`;
+        const endpoint = `/api/indexer?query=${query}`;
         
         try {
             const response = await fetch(endpoint, {
@@ -54,7 +54,7 @@ export class InsertUrlCommand extends HandlerCommand {
         let query = `INSERT INTO urls (id_profile, name, url, frecuency) VALUES (${urlData.id_profile}, '${urlData.name}', '${urlData.url}', ${urlData.frecuency});`;
 
         try {
-            const response = await fetch("/server", {
+            const response = await fetch("/api/indexer", {
                 method: "POST",
                 body: query,
             });
@@ -79,7 +79,7 @@ export class DeleteUrlCommand extends HandlerCommand {
         let query = `DELETE FROM urls WHERE id = ${urlData.id};`;
         
         try {
-            const response = await fetch("/server", {
+            const response = await fetch("/api/indexer", {
                 method: "DELETE",
                 body: query,
             });
@@ -104,7 +104,7 @@ export class InsertProfileCommand extends HandlerCommand {
         let query = `INSERT INTO users_profiles (id_user, name) VALUES (${profileData.id_user}, '${profileData.name}');`;
         
         try {
-            const response = await fetch("/server", {
+            const response = await fetch("/api/indexer", {
                 method: "POST",
                 body: query,
             });
@@ -130,7 +130,7 @@ export class DeleteProfileCommand extends HandlerCommand {
         const id_profile =this.data;
         let query = `DELETE FROM users_profiles WHERE id = ${id_profile};`;
         try {
-            const response = await fetch("/server", {
+            const response = await fetch("/api/indexer", {
                 method: "DELETE",
                 body: query,
             });
@@ -146,15 +146,28 @@ export class DeleteProfileCommand extends HandlerCommand {
 }
 
 export class IndexURLCommand extends HandlerCommand {
-    constructor(data) {
+    constructor (data) {
         super(data);
     }
 
-    async execute(){
+    async execute (){
         const urlData = new UrlData(this.data);
         console.log("urlData a indexar: ", urlData);
         try {
-            //Aquí haces la llamada para indexar, los campos que necesitas ya están , los puedes consultar en la interface UrlData
+            const formData = new FormData();
+            formData.append('action', 'indexPage');
+            formData.append('url', urlData.url);
+            const response = await fetch("/api/solr", {
+                method: "POST",
+                body: formData,
+            });
+            console.log("response: ", response);
+            if (response.ok) {
+                
+                const dataResponse = await response.json();
+                console.log("dataResponse: ", dataResponse);
+                return dataResponse;
+            }
         } catch (error) {
             console.error("Error al indexar URL:", error);
             throw new Error(error);
@@ -174,7 +187,7 @@ export class CallStoredProcedureCommand extends HandlerCommand {
         const query = `CALL update_visited_status2(${id_user});`;
 
         try {
-            const response = await fetch("/server", {
+            const response = await fetch("/api/indexer", {
                 method: "POST",
                 body: query,
             });
@@ -201,7 +214,7 @@ export class updateIndexURLCommand extends HandlerCommand {
         const query = `UPDATE urls SET name = '${urlData.name}', url = '${urlData.url}', visited = 1, frecuency = ${urlData.frecuency} WHERE id = ${urlData.id};`;
 
         try {
-            const response = await fetch("/server", {
+            const response = await fetch("/api/indexer", {
                 method: "PUT",
                 body: query,
             });

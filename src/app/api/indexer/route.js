@@ -1,8 +1,7 @@
 "use server"
-import { Message } from '@mui/icons-material';
-import { db } from '../infra/databaseConnections/dbConnection.js';
+import { db } from '../../../infra/databaseConnections/dbConnection.js';
 
-export async function POST(request) {
+export async function POST (request) {
   try { 
     console.log("Solicitaron un POST");
     const requestBody = await request.text();

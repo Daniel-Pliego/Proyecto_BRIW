@@ -19,13 +19,6 @@ export async function POST (request) {
 }
 
 const getCorrectQuery = async (query) => {
-  // const assistant = await openai.beta.assistants.create({
-  //   name: "Corrector API",
-  //   instructions:
-  //     "you are an API for a search engine. check the sentence or word for spelling errors, you will return the corrected sentence or word",
-  //   model: "gpt-3.5-turbo",
-  // });
-
   const thread = await openai.beta.threads.create();
   const message = await openai.beta.threads.messages.create(thread.id, {
     role: "user",

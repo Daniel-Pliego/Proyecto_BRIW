@@ -2,8 +2,8 @@
 import React, { useCallback, useState, useEffect  } from "react";
 import SearchProfileTable  from "../components/SearchProfiles/ProfilesTable";
 import NewProfile from '../components/SearchProfiles/NewProfile';
-import HandlerManager from "../infra/store/commands/HandlerManager";
-import { UserData } from "../core/entities/Interface";
+import HandlerManager from "../../infra/store/commands/HandlerManager";
+import { UserData } from "../../core/entities/Interface";
 
 
 export default function SearchProfiles(){

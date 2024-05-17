@@ -4,9 +4,9 @@ import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import { ProfileData, UrlData } from '../../core/entities/Interface';
+import { ProfileData, UrlData } from '../../../core/entities/Interface';
 import UrlForm from '../urls/UrlForm';
-import HandlerManager from '../../infra/store/commands/HandlerManager';
+import HandlerManager from '../../../infra/store/commands/HandlerManager';
 import {handleTextFieldChange, resetUrlFormData} from '../Services/servicesTextField';
 
 const style = {
