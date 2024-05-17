@@ -24,8 +24,8 @@ function returnSolrClient () {
   return solrClient;
 }
 
-module.exports = {
-  returnSolrClient,
+export { 
   returnURLcore,
-  returnURLFileIndexer
+  returnURLFileIndexer,
+  returnSolrClient
 };
