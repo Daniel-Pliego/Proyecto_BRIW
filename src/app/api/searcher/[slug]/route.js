@@ -1,10 +1,9 @@
-import { returnURLcore } from "../../../../infra/gateway/solr/solr.js";
-import { returnTokens, fixedEncodeURIComponent } from "../../../../core/utils/searcher/tokenizer.js"
+import { returnTokens, fixedEncodeURIComponent } from "C:/Users/jonat/OneDrive/Documentos/8voSemestre/clean/Proyecto_BRIW/src/core/utils/searcher/tokenizer.js"
 import { returnSynonyms } from "../../../../core/utils/searcher/expander.js"
-const solrUrl = returnURLcore();
+const coreName = process.env.CORE_NAME;
+const solrUrl = 'http://localhost:8983/solr/'+coreName;
 
 export async function GET (request, { params }) {
-    console.log("GET search");
     var result;
     const searchParams = request.nextUrl.searchParams
     const slug = params.slug;
@@ -30,6 +29,7 @@ export async function GET (request, { params }) {
 function isAcceptedOperator (word) {
     return word == "not" || word == "and" || word == "or"
 }
+
 async function addSearchingOperator (word, tokenPrevious, query, lang) {
     var similarWordsResult = []
     if (lang != 'notFound') {
@@ -52,7 +52,7 @@ async function addSearchingOperator (word, tokenPrevious, query, lang) {
     return query;
 }
 
-export async function buildQuery (userInput) {
+async function buildQuery (userInput) {
     var query = "";
     if (userInput === "*:*") {
         query = "*:*";
