@@ -25,7 +25,7 @@ model users {
 model users_profiles {
   id Int @id @default(autoincrement())
   name String @unique
-  user_id Int 
+  id_user Int @map(name: "user_id")
   created DateTime @default(now())
 }
 
@@ -41,7 +41,7 @@ model urls {
 
 model documents {
   id Int @id @default(autoincrement())
-  user_id Int
+  id_user Int @map(name: "user_id")
   name String
   updated DateTime @updatedAt
 }
