@@ -9,8 +9,11 @@ export const Navbar = () => {
       <Link className="p-2 px-4 rounded-lg hover:bg-indigo-700" href="/">
         Buscador
       </Link>
-      <Link className="p-2 px-4 rounded-lg hover:bg-indigo-700" href="/upload">
-        Subir archivos
+      <Link
+        className="p-2 px-4 rounded-lg hover:bg-indigo-700"
+        href="/documents"
+      >
+        Documentos
       </Link>
       <Link className="p-2 px-4 rounded-lg hover:bg-indigo-700" href="/profiles">
         Perfiles de busqueda
