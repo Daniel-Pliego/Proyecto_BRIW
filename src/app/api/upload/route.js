@@ -1,10 +1,10 @@
 import fs from "fs";
 import path from "path";
-import {returnURLFileIndexer} from "public/script/solrClient/solr.js";
+import { returnURLFileIndexer } from "../../../infra/gateway/solr/solr";
 import axios from 'axios';
 const FormData = require('form-data');
 
-export async function POST (request) {
+export async function POST(request) {
   // Crear la carpeta "files"
   const uploadDir = path.join(process.cwd(), "files");
   if (!fs.existsSync(uploadDir)) {
@@ -19,10 +19,10 @@ export async function POST (request) {
   files.forEach(async (file) => {
     const filePath = path.join(uploadDir, file.name);
     const writeStream = fs.createWriteStream(filePath);
-    if(!checkFileExists(uploadDir, file.name)){
+    if (!checkFileExists(uploadDir, file.name)) {
       let fileBuff = await file.arrayBuffer();
       let fileBuffer = Buffer.from(fileBuff);
-  
+
       writeStream.write(fileBuffer);
       writeStream.end();
       writeStream.on('finish', async () => {
@@ -45,7 +45,7 @@ const checkFileExists = (directory, fileName) => {
   return fs.existsSync(filePath);
 };
 
-async function enviarArchivoASolr (filePath) {
+async function enviarArchivoASolr(filePath) {
   console.log('File Path:', filePath); // Log the file path
   const solrUrl = returnURLFileIndexer();
 
