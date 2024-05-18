@@ -10,8 +10,3 @@ const db =mysql ({
 });
 
 export { db };
-
-// console.log("HOST: ", process.env.HOST);
-// console.log("DATABASE: ", process.env.DATABASE);
-// console.log("USERNAME: ", process.env.NOMBRE);
-// console.log("--------------------------------------");

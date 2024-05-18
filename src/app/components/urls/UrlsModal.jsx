@@ -24,7 +24,7 @@ const style = {
   pb: 3,
 };
 
-function NewURLButton({ id_profile }) {
+function NewURLButton ({ id_profile }) {
   const [open, setOpen] = React.useState(false);
   const [formData, setFormData] = useState(new UrlData({
     name: '',
@@ -41,15 +41,6 @@ function NewURLButton({ id_profile }) {
   const handleClose = () => {
     setOpen(false);
   };
-
-  // const resetFormData = () => {
-  //   setFormData(new UrlData({
-  //     name: '',
-  //     url: '',
-  //     frecuency: '',
-  //     id_profile: id_profile,
-  //   }));
-  // };
 
   return (
     <React.Fragment>
@@ -86,7 +77,7 @@ function NewURLButton({ id_profile }) {
   );
 }
 
-export default function UrlModal({ urls }) {
+export default function UrlModal ({ urls }) {
   const [open, setOpen] = React.useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
 

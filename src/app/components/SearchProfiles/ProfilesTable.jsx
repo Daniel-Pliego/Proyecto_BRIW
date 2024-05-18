@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import HandlerManager from '../../../infra/store/commands/HandlerManager';
 
-function groupProfiles(array) {
+function groupProfiles (array) {
   return array.reduce((groups, elemento) => {
     const existingGroup = groups.find(group => group[0].id_profile === elemento.id_perfil);
     if (existingGroup) {
@@ -28,7 +28,7 @@ function groupProfiles(array) {
   }, []);
 }
 
-export default function SearchProfileTable({ profiles }) {
+export default function SearchProfileTable ({ profiles }) {
   const [rows, setRows] = useState([]);
   const [groupedProfiles, setGroupedProfiles] = useState(null); 
 
@@ -85,7 +85,7 @@ export default function SearchProfileTable({ profiles }) {
   );
 }
 
-function generateRows(groupedProfiles) { //mover como función abstracta de otra clase (table)
+function generateRows (groupedProfiles) {
   const newRows = groupedProfiles.map((groupedProfile, index) => {
     const number = index + 1;
     const name = groupedProfile[0].profile_name;

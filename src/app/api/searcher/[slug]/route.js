@@ -1,4 +1,4 @@
-import { returnTokens, fixedEncodeURIComponent } from "C:/Users/jonat/OneDrive/Documentos/8voSemestre/clean/Proyecto_BRIW/src/core/utils/searcher/tokenizer.js"
+import { returnTokens, fixedEncodeURIComponent } from "../../../../core/utils/searcher/tokenizer.js"
 import { returnSynonyms } from "../../../../core/utils/searcher/expander.js"
 const coreName = process.env.CORE_NAME;
 const solrUrl = 'http://localhost:8983/solr/'+coreName;

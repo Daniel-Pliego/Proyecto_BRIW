@@ -1,6 +1,6 @@
 import { UrlData } from "@/core/entities/Interface";
 
-export function handleTextFieldChange(event, fieldName, setFormData) {
+export function handleTextFieldChange (event, fieldName, setFormData) {
         const value = event.target.value;
         setFormData(prevData => {
             const newData = { ...prevData };

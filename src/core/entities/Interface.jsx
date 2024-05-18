@@ -1,5 +1,5 @@
 class UrlData {
-    constructor(data) {
+    constructor (data) {
         this.url = data.url;
         this.name = data.name;
         this.frecuency = data.frecuency || null;
@@ -10,7 +10,7 @@ class UrlData {
 }
 
 class UserData {
-    constructor(data) {
+    constructor (data) {
         this.id_user = data.id_user;
         this.username = data.username;
         this.password = data.password;
@@ -18,7 +18,7 @@ class UserData {
 }
 
 class ProfileData {
-    constructor(data) {
+    constructor (data) {
         this.id_user = data.id_user;
         this.name = data.name;
         this.id_profile = data.id_profile;

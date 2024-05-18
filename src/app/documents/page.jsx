@@ -4,7 +4,7 @@ import DocumentsTable from "../components/Documents/DocumentsTable";
 import Link from "next/link";
 import DropdownMenu from "../components/DropMenu";
 
-export default function UploadPage() {
+export default function UploadPage () {
   return (
     <div className="justify-center items-center">
       <div className="flex justify-center items-center">

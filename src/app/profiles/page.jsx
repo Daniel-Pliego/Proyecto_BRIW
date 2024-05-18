@@ -6,7 +6,7 @@ import HandlerManager from "../../infra/store/commands/HandlerManager";
 import { UserData } from "../../core/entities/Interface";
 
 
-export default function SearchProfiles(){
+export default function SearchProfiles (){
     const [profiles, setProfiles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [userData, setUserData] = useState(new UserData({
@@ -15,7 +15,7 @@ export default function SearchProfiles(){
         password: ''
     }));
 
-    async function indexURLSFromProcedure(manager){
+    async function indexURLSFromProcedure (manager){
         const procedureResponse = await manager.callStoredProcedure( userData.id_user);
         if (procedureResponse.status === 200) {
             const rowsAffected = procedureResponse.result[0];
@@ -28,7 +28,7 @@ export default function SearchProfiles(){
             throw new Error(procedureResponse);
         }
     }
-    async function getURLS(manager){
+    async function getURLS (manager){
         const response = await manager.getUrlsAndProfilesName(userData);
         if (response.status === 200) {
             const responseData = await response.result;
@@ -56,7 +56,6 @@ export default function SearchProfiles(){
 
     if (loading) {
         return <div>Cargando perfiles...</div>
-        // Se puede poner otro elemento mas bonito
     }
 
     return (

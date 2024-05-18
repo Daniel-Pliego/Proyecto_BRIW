@@ -1,4 +1,3 @@
-// dbConnection.test.js
 
 import { db } from './dbConnection';
 

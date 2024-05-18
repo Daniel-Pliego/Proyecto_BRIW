@@ -10,7 +10,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 
-function createData(id, name, subido) {
+function createData (id, name, subido) {
   return { id, name, subido };
 }
 
@@ -21,7 +21,7 @@ const rows = [
   createData(4, "Cupcake", "2021-10-10"),
 ];
 
-export default function DocumentsTable() {
+export default function DocumentsTable () {
   //   const [data, setData] = useState([]);
   //   useEffect(() => {
   //     const fetchData = async () => {

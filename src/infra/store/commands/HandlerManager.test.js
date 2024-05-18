@@ -29,7 +29,7 @@ describe('HandlerManager', () => {
             password: "password"
         });
         manager = new HandlerManager();
-        jest.clearAllMocks(); // Para reiniciar todos los mocks
+        jest.clearAllMocks();
     });
 
     test('should create a handler manager', () => {
@@ -103,7 +103,6 @@ describe('HandlerManager', () => {
     });
 
     test('should index a url', async () => {
-        // const urlData = { url: 'https://ejemplo.com' };
 
         global.fetch = jest.fn().mockImplementation(() => {
             return Promise.resolve({

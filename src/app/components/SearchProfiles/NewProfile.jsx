@@ -22,7 +22,7 @@ const style = {
     pb: 3,
   };
   
-function NewProfileForm({ setFormData, onTextFieldChange, setFormDataURL}) {
+function NewProfileForm ({ setFormData, onTextFieldChange, setFormDataURL}) {
   const [frecuencia, setFrecuencia] = useState('');
 
   return (
@@ -54,7 +54,7 @@ function NewProfileForm({ setFormData, onTextFieldChange, setFormDataURL}) {
   );
 }
 
-export default function NewProfile() {
+export default function NewProfile () {
   const [open, setOpen] = React.useState(false);
   
   const [formDataProfile, setFormDataProfile] = useState(new ProfileData({

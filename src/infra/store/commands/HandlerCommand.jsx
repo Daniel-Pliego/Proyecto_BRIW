@@ -2,7 +2,7 @@ import { UrlData, ProfileData, UserData } from '../../../core/entities/Interface
 
 
 class HandlerCommand {
-    constructor(data){
+    constructor (data){
         this.data = data;
     }
 
@@ -10,11 +10,11 @@ class HandlerCommand {
 }
 
 export class GetUrlsAndProfilesCommand extends HandlerCommand {
-    constructor(data) {
+    constructor (data) {
         super(data);
     }
 
-    async execute(){
+    async execute (){
         const userData = new UserData(this.data);
         let query = `SELECT urls.*, Uprofiles.name AS profile_name , Uprofiles.id AS id_perfil, Uprofiles.created ` +
                     `FROM urls ` +
@@ -41,11 +41,11 @@ export class GetUrlsAndProfilesCommand extends HandlerCommand {
 
 export class InsertUrlCommand extends HandlerCommand {
     
-    constructor(data) {
+    constructor (data) {
         super(data);
     }
 
-    async execute(){
+    async execute (){
         const urlData = new UrlData(this.data);
         let query = `INSERT INTO urls (id_profile, name, url, frecuency) VALUES (${urlData.id_profile}, '${urlData.name}', '${urlData.url}', ${urlData.frecuency});`;
 
@@ -66,11 +66,11 @@ export class InsertUrlCommand extends HandlerCommand {
 }
 
 export class DeleteUrlCommand extends HandlerCommand {
-    constructor(data) {
+    constructor (data) {
         super(data);
     }
 
-    async execute(){
+    async execute (){
         const urlData = new UrlData(this.data);
         let query = `DELETE FROM urls WHERE id = ${urlData.id};`;
         
@@ -91,11 +91,11 @@ export class DeleteUrlCommand extends HandlerCommand {
 }
 
 export class InsertProfileCommand extends HandlerCommand {
-    constructor(data) {
+    constructor (data) {
         super(data);
     }
 
-    async execute(){
+    async execute (){
         const profileData = new ProfileData(this.data);
         let query = `INSERT INTO users_profiles (id_user, name) VALUES (${profileData.id_user}, '${profileData.name}');`;
         
@@ -118,11 +118,11 @@ export class InsertProfileCommand extends HandlerCommand {
 }
 
 export class DeleteProfileCommand extends HandlerCommand {
-    constructor(data) {
+    constructor (data) {
         super(data);
     }
 
-    async execute(){
+    async execute (){
         const id_profile =this.data;
         let query = `DELETE FROM users_profiles WHERE id = ${id_profile};`;
         try {
@@ -173,11 +173,11 @@ export class IndexURLCommand extends HandlerCommand {
 }
 
 export class CallStoredProcedureCommand extends HandlerCommand {
-    constructor(data) {
+    constructor (data) {
         super(data);
     }
 
-    async execute(){
+    async execute (){
         const id_user = this.data;
         console.log("id_user: ", id_user);
         const query = `CALL update_visited_status2(${id_user});`;
@@ -200,11 +200,11 @@ export class CallStoredProcedureCommand extends HandlerCommand {
 }
 
 export class updateIndexURLCommand extends HandlerCommand {
-    constructor(data) {
+    constructor (data) {
         super(data);
     }
 
-    async execute(){
+    async execute (){
         const urlData = new UrlData(this.data);
         console.log("urlData a actualizar: ", urlData);
         const query = `UPDATE urls SET name = '${urlData.name}', url = '${urlData.url}', visited = 1, frecuency = ${urlData.frecuency} WHERE id = ${urlData.id};`;
