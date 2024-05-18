@@ -50,20 +50,6 @@ jobs:
       - name: Creating env file
         run: cp .env.example .env
 
-      - name: Start MySQL container
-        run: |
-          docker run --name mysql-container --network mi-red-docker -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=dbcleanarchitecture -e MYSQL_USER=$root -e MYSQL_PASSWORD=root -p 3306:3306 -d mysql:latest
-
-      - name: Wait for MySQL to be ready
-        run: |
-          while ! docker exec mysql-container mysqladmin ping -h127.0.0.1 --silent; do
-            sleep 1
-          done
-
-      - name: Verify MySQL Connection
-        run: |
-          docker exec mysql-container mysql -h127.0.0.1 -uroot -proot -e "SHOW DATABASES;"
-
       - name: Run integration tests
         run: npm run test
 
