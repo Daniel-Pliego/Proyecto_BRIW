@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 
-function DropdownMenu() {
+function DropdownMenu () {
   const [selectedOption, setSelectedOption] = useState("");
 
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
-  function createData(id, name) {
+  function createData (id, name) {
     return { id, name };
   }
 

@@ -1,7 +1,7 @@
-import { returnURLcore } from "../../../../infra/gateway/solr/solr.js";
 import { returnTokens, fixedEncodeURIComponent } from "../../../../core/utils/searcher/tokenizer.js"
 import { returnSynonyms } from "../../../../core/utils/searcher/expander.js"
-const solrUrl = returnURLcore();
+const coreName = process.env.CORE_NAME;
+const solrUrl = 'http://localhost:8983/solr/'+coreName;
 
 export async function GET (request, { params }) {
     var result;
@@ -87,7 +87,7 @@ export async function buildQuery (userInput) {
     return query
 }
 
-async function searchDocuments (query) {
+export async function searchDocuments (query) {
     var querySolr = `${solrUrl}` + '/select?indent=true&q.op=OR&q=';
     let scoreSortDescendant = "&sort=score+desc&fl=*,+score";
 

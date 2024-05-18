@@ -15,6 +15,9 @@ export const Navbar = () => {
       >
         Documentos
       </Link>
+      <Link className="p-2 px-4 rounded-lg hover:bg-indigo-700" href="/profiles">
+        Perfiles de busqueda
+      </Link>
     </nav>
   );
 };

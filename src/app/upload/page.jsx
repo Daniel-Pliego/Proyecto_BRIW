@@ -4,7 +4,7 @@ import { useDropzone } from "react-dropzone";
 import DropdownMenu from "../components/DropMenu";
 import Link from "next/link";
 
-export default function UploadPage() {
+export default function UploadPage () {
   const [files, setFiles] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
