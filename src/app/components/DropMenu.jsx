@@ -1,23 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function DropdownMenu() {
   const [selectedOption, setSelectedOption] = useState("");
+  const [users, setUsers] = useState([]);
 
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
-  function createData(id, name) {
-    return { id, name };
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/indexer/users", {
+          method: "GET",
+        });
+        const users = await response.json();
+        const usersArray = Array.isArray(users) ? users : [users];
 
-  const rows = [
-    createData(1, "Frozen yoghurt"),
-    createData(2, "Ice cream sandwich"),
-    createData(3, "Eclair"),
-    createData(4, "Cupcake"),
-    createData(5, "Gingerbread"),
-  ];
+        setUsers(usersArray[0].result);
+        // console.log(users);
+      } catch (error) {
+        console.log("Error fetching documents", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -28,9 +35,9 @@ function DropdownMenu() {
         onChange={handleChange}
       >
         <option value="">Seleccione usuario</option>
-        {rows.map((row) => (
-          <option key={row.id} value={row.name}>
-            {row.name}
+        {users.map((user) => (
+          <option key={user.id} value={user.username}>
+            {user.username}
           </option>
         ))}
       </select>
