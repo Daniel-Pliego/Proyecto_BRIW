@@ -52,7 +52,7 @@ jobs:
 
       - name: Start MySQL container
         run: |
-          docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=dbcleanarchitecture -e MYSQL_USER=$root -e MYSQL_PASSWORD=root -p 3306:3306 -d mysql:latest
+          docker run --name mysql-container --network mi-red-docker -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=dbcleanarchitecture -e MYSQL_USER=$root -e MYSQL_PASSWORD=root -p 3306:3306 -d mysql:latest
 
       - name: Wait for MySQL to be ready
         run: |
@@ -62,7 +62,7 @@ jobs:
 
       - name: Verify MySQL Connection
         run: |
-          docker exec mysql-container mysql -h127.0.0.1 -u$NOMBRE -p$PASSWORD -e "SHOW DATABASES;"
+          docker exec mysql-container mysql -h127.0.0.1 -uroot -proot -e "SHOW DATABASES;"
 
       - name: Run integration tests
         run: npm run test
