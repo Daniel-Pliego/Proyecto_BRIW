@@ -50,13 +50,9 @@ jobs:
       - name: Creating env file
         run: cp .env.example .env
 
-      - name: Load .env
-        run: |
-          export $(cat .env | xargs)
-
       - name: Start MySQL container
         run: |
-          docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=$PASSWORD -e MYSQL_DATABASE=$DATABASE -e MYSQL_USER=$NOMBRE -e MYSQL_PASSWORD=$PASSWORD -p 3306:3306 -d mysql:latest
+          docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=dbcleanarchitecture -e MYSQL_USER=$root -e MYSQL_PASSWORD=root -p 3306:3306 -d mysql:latest
 
       - name: Wait for MySQL to be ready
         run: |
