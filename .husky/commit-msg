@@ -1,0 +1,3 @@
+npm run lint
+
+bash ./.husky/commit-conventional-custom.sh $1  

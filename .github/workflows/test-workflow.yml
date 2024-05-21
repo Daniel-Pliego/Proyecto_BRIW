@@ -1,0 +1,58 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Setup Node.js
+        uses : actions/setup-node@v2
+        with:
+          node-version: '20.11.1'
+
+      - name: Create network 
+        run: docker network create --subnet=172.19.0.0/16 mi-red-docker
+
+      - name: Create solr-core image
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
+      - name: Wait solr
+        run: docker exec solrPrueba2 solr status
+        timeout-minutes: 5
+
+      - name: Execute command inside Solr container
+        run: docker exec solrPrueba2 solr create_core -c v2 -d /opt/solr/server/solr/configsets/solr-config
+
+      - name: upload docker image
+        run: docker pull jonatan08/myimage:tagname
+
+      - name: Run container
+        run: docker run -d --name mycontainer --network mi-red-docker -p 8000:8000 jonatan08/myimage:tagname
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Creating env file
+        run: cp .env.example .env
+
+      - name: Run integration tests
+        run: npm run test
+
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.yml" down
