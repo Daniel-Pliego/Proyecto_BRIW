@@ -1,0 +1,50 @@
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_visited_status2`(IN `user_id` INT)
+BEGIN
+    DECLARE hours_difference INT;
+    DECLARE url_updated TIMESTAMP;
+    DECLARE url_frecuency INT;
+    DECLARE id_row INT;
+    
+    -- Declarar el cursor para iterar sobre las filas
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE cur CURSOR FOR 
+        SELECT u.updated, u.frecuency, u.id
+        FROM mydb.urls u
+        JOIN mydb.users_profiles up ON u.id_profile = up.id
+        WHERE up.id_user = user_id;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    -- Crear tabla temporal para almacenar los IDs de las filas afectadas
+    CREATE TEMPORARY TABLE affected_ids (id INT);
+
+    -- Iterar sobre las filas de la tabla para el usuario específico
+    OPEN cur;
+    read_loop: LOOP
+        FETCH cur INTO url_updated, url_frecuency, id_row;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        -- Calcular la diferencia en horas
+        SET hours_difference = TIMESTAMPDIFF(HOUR, url_updated, NOW());
+
+        -- Actualizar la columna visited y updated si la diferencia de horas es mayor o igual que la frecuencia
+        IF hours_difference >= url_frecuency THEN
+            UPDATE mydb.urls 
+            SET visited = 0, updated = CURRENT_TIMESTAMP 
+            WHERE id = id_row;
+            
+            -- Agregar el ID de la fila afectada a la tabla temporal
+            INSERT INTO affected_ids VALUES (id_row);
+        END IF;
+    END LOOP;
+    CLOSE cur;
+
+    -- Seleccionar todas las filas afectadas y devolverlas como resultado
+    SELECT * FROM mydb.urls WHERE id IN (SELECT id FROM affected_ids);
+
+    -- Limpiar la tabla temporal
+    DROP TEMPORARY TABLE IF EXISTS affected_ids;
+END$$
+DELIMITER ;
